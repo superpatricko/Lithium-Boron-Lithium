@@ -6,10 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import play.api.Play;
-import scala.Option;
-import scala.Some;
-import scala.runtime.AbstractFunction0;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 
 public class DatabaseManager {
    
@@ -26,38 +24,17 @@ public class DatabaseManager {
 	   
 	   try{
 		   
+		   Config c = ConfigFactory.load();
+
 		   // Register JDBC driver
 		   
-		   // Verbose as fuck way of getting the value with a default of com.mysql.jdbc.Driver
-		   jdbcDriver = Play.current().configuration().getString("db.default.driver", null).orElse(new AbstractFunction0<Option<String>>() {
-				@Override
-				public Option<String> apply() {
-					return new Some<String>("com.mysql.jdbc.Driver");
-				}
-			}).get();
+		   jdbcDriver = c.getString("db.default.driver");
 		   
 		   Class.forName(jdbcDriver); // may throw
 
-		   // Verbose as fuck way of getting other settings
-		   url = Play.current().configuration().getString("db.default.url", null).orElse(new AbstractFunction0<Option<String>>() {
-				@Override
-				public Option<String> apply() {
-					return new Some<String>("jdbc:mysql://localhost:3306/comp353");
-				}
-			}).get();
-		   username = Play.current().configuration().getString("db.default.user", null).orElse(new AbstractFunction0<Option<String>>() {
-				@Override
-				public Option<String> apply() {
-					return new Some<String>("root");
-				}
-			}).get();
-		   password = Play.current().configuration().getString("db.default.password", null).orElse(new AbstractFunction0<Option<String>>() {
-				@Override
-				public Option<String> apply() {
-					return new Some<String>("root");
-				}
-			}).get();
-		   
+		   url = c.getString("db.default.url");
+		   username = c.getString("db.default.user");
+		   password = c.getString("db.default.password");
 		   
 		   // Try to connect to DB
 		   conn = DriverManager.getConnection(url, username, password);
