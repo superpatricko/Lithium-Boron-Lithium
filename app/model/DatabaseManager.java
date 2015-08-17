@@ -29,7 +29,7 @@ public class DatabaseManager {
 		   // Register JDBC driver
 		   
 		   // Verbose as fuck way of getting the value with a default of com.mysql.jdbc.Driver
-		   jdbcDriver = Play.current().configuration().getString("db.jdbc_driver", null).orElse(new AbstractFunction0<Option<String>>() {
+		   jdbcDriver = Play.current().configuration().getString("db.default.driver", null).orElse(new AbstractFunction0<Option<String>>() {
 				@Override
 				public Option<String> apply() {
 					return new Some<String>("com.mysql.jdbc.Driver");
@@ -37,21 +37,21 @@ public class DatabaseManager {
 			}).get();
 		   
 		   Class.forName(jdbcDriver); // may throw
-		   
+
 		   // Verbose as fuck way of getting other settings
-		   url = Play.current().configuration().getString("db.url", null).orElse(new AbstractFunction0<Option<String>>() {
+		   url = Play.current().configuration().getString("db.default.url", null).orElse(new AbstractFunction0<Option<String>>() {
 				@Override
 				public Option<String> apply() {
 					return new Some<String>("jdbc:mysql://localhost:3306/comp353");
 				}
 			}).get();
-		   username = Play.current().configuration().getString("db.user", null).orElse(new AbstractFunction0<Option<String>>() {
+		   username = Play.current().configuration().getString("db.default.user", null).orElse(new AbstractFunction0<Option<String>>() {
 				@Override
 				public Option<String> apply() {
 					return new Some<String>("root");
 				}
 			}).get();
-		   password = Play.current().configuration().getString("db.password", null).orElse(new AbstractFunction0<Option<String>>() {
+		   password = Play.current().configuration().getString("db.default.password", null).orElse(new AbstractFunction0<Option<String>>() {
 				@Override
 				public Option<String> apply() {
 					return new Some<String>("root");
