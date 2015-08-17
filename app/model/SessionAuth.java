@@ -4,8 +4,8 @@ import play.mvc.Http.Session;
 
 public abstract class SessionAuth {
 	
-	public final static SessionAuth instance = new HardCodedSessionAuth();
-	private SessionAuth(){}
+	public final static SessionAuth instance = new DatabaseSessionAuth();
+	protected SessionAuth(){}
 	
 	public static class SessionInfo {
 		public SessionInfo(String username, int employeeId) {

@@ -2,6 +2,7 @@
   <classpathentry output=".target" path="app" kind="src"></classpathentry>
   <classpathentry output=".target" path="test" kind="src"></classpathentry>
   <classpathentry path="./target/scala-2.9.1/classes_managed" kind="lib"></classpathentry>
+  <classpathentry path="./lib/mysql-connector-java-5.0.8-bin.jar" kind="lib"></classpathentry>
   <classpathentry path="../repository/local/play/play_2.9.1/2.0.8/jars/play_2.9.1.jar" kind="lib"></classpathentry>
   <classpathentry path="../repository/local/play/templates_2.9.1/2.0.8/jars/templates_2.9.1.jar" kind="lib"></classpathentry>
   <classpathentry path="../repository/local/com.github.scala-incubator.io/scala-io-file_2.9.1/0.4.0/jars/scala-io-file_2.9.1.jar" kind="lib"></classpathentry>
