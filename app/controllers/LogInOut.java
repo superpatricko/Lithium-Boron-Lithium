@@ -5,7 +5,6 @@ import model.SessionAuth.SessionInfo;
 import play.data.DynamicForm;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.index;
 import views.html.login;
 
 
