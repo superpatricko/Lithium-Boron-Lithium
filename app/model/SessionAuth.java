@@ -5,6 +5,7 @@ import play.mvc.Http.Session;
 public abstract class SessionAuth {
 	
 	public final static SessionAuth instance = new HardCodedSessionAuth();
+	private SessionAuth(){}
 	
 	public static class SessionInfo {
 		public SessionInfo(String username, int employeeId) {
