@@ -17,3 +17,4 @@ server.pid
 .cache
 *.class
 .target
+.DS_Store
