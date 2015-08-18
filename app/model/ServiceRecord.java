@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -40,18 +41,45 @@ public class ServiceRecord {
 		this.end   = end;
 	}
 	
+	public static enum Status {
+		SUCCESS,
+		PATIENT_UNAVAILABLE,
+		NURSE_UNAVAILABLE,
+		DOCTOR_UNAVAILABLE,
+		ERROR
+	};
+	
 	/**
 	 * Save this ServiceRecord to the database. Assumes this is a new ServiceRecord, so INSERTs a 
 	 * new row. 
 	 * 
 	 * Assumes that the service, and optional doctor and nurse already exist in the database.
 	 */
-	public void writeToDb(){
+	public Status writeToDb(){
 		
 		// TODO - ensure that there are no time conflicts for doctors!!! (hmmmmmm)
-		
+		Connection conn = null;
 		try {
-			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(""
+			conn = DatabaseManager.instance.getNewConnection();
+			// Start a new transaction
+			conn.setAutoCommit(false);
+			
+			if(nurse != null && !nurse.scheduleService(start, end, conn)){
+				conn.rollback();
+				return Status.NURSE_UNAVAILABLE;
+			}
+			
+			if(doctor != null && !doctor.scheduleService(start, end, conn)){
+				conn.rollback();
+				return Status.DOCTOR_UNAVAILABLE;
+			}
+			
+			if(! patient.scheduleService(start, end, conn)){
+				conn.rollback();
+				return Status.PATIENT_UNAVAILABLE;
+			}
+			
+			PreparedStatement s = conn.prepareStatement(""
 					+ "INSERT INTO service_log "
 					+ " ( "
 					//+ "   service_log_id, "
@@ -91,9 +119,19 @@ public class ServiceRecord {
 			s.setNull(7, Types.INTEGER);
 			s.setNull(8, Types.INTEGER);
 
-			s.executeUpdate();
+			if(s.executeUpdate() != 1){
+				conn.rollback();
+				return Status.ERROR;
+			}else{
+				conn.commit();
+				return Status.SUCCESS;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
 		}
 	}
 

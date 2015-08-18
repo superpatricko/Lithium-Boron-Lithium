@@ -1,8 +1,10 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -79,6 +81,27 @@ public class Nurse extends Employee {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	/**
+	 * Schedule a service for a nurse. This should check that:
+	 * 
+	 * <ul>
+     *   <li>The nurse has a shift scheduled during the time</li>
+     *   <li>The nurse does not already have a service scheduled for that time</li>
+	 * </ul>
+	 * 
+	 * This method does not actually insert anything, it just checks that the nurse is available
+	 * 
+	 * @param start The start time of the service to be scheduled
+	 * @param end The end time of the service to be scheduled
+	 * @param conn The connection object to use (because this may need to be run inside a transaction)
+	 * @return True if the service can be scheduled, false otherwise
+	 */
+	public boolean scheduleService(Date start, Date end, Connection conn) {
+		
+		
+		return false;
 	}
 
 

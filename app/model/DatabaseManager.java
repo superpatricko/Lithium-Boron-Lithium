@@ -26,44 +26,47 @@ public class DatabaseManager {
 	 */
 	public final static DatabaseManager instance = new DatabaseManager();
 
+	String jdbcDriver;
+	String url;
+	String password;
+	String username;
+
+	
 	private DatabaseManager() {
 
-		String jdbcDriver = null;
-		String url = null;
-		String password = null;
-		String username = null;
+		jdbcDriver = null;
+		url = null;
+		password = null;
+		username = null;
+	
+		Config c = ConfigFactory.load();
+
+		// Register JDBC driver
+
+		jdbcDriver = c.getString("db.default.driver");
 
 		try {
-
-			Config c = ConfigFactory.load();
-
-			// Register JDBC driver
-
-			jdbcDriver = c.getString("db.default.driver");
-
-			Class.forName(jdbcDriver); // may throw
-
-			url = c.getString("db.default.url");
-			username = c.getString("db.default.user");
-			password = c.getString("db.default.password");
-
-			// Try to connect to DB
-			conn = DriverManager.getConnection(url, username, password);
-		} catch (Exception e) {
-			System.err.println("Could not connect to database with :\n"
-					+ "   driver: " + jdbcDriver + "\n" + "   url   : " + url
-					+ "\n" + "   user  : " + username + "\n" + "   pass  : "
-					+ password + "\n");
-
-			e.printStackTrace(System.err);
-
+			Class.forName(jdbcDriver);
+		} catch (ClassNotFoundException e) {
 			System.exit(1);
-
+			e.printStackTrace();
 		}
+
+		url = c.getString("db.default.url");
+		username = c.getString("db.default.user");
+		password = c.getString("db.default.password");
+		
+		conn = getNewConnection();
+		
+		if(conn == null){
+			System.exit(2);
+		}
+
 	}
 
 	/**
-	 * Create a new {@link Statement}
+	 * Create a new {@link Statement}. This Statment uses
+	 * the DatabaseManager's default connection
 	 * 
 	 * @return A new empty Statement
 	 * @throws SQLException if {@link java.sql.Connection#createStatement() Connection.createStatement()} throws
@@ -73,7 +76,8 @@ public class DatabaseManager {
 	}
 
 	/**
-	 * Create a new {@link PreparedStatement} using the given String
+	 * Create a new {@link PreparedStatement} using the given String. This PreparedStatment uses
+	 * the DatabaseManager's default connection
 	 * 
 	 * @param s The String of the PreparedStatement
 	 * @return A new PreparedStatement
@@ -84,4 +88,26 @@ public class DatabaseManager {
 		return conn.prepareStatement(s);
 	}
 
+	/**
+	 * Open and return a new {@link java.sql.Connection} object. This can be used for
+	 * example if you need to run multiple queries inside a transaction.
+	 * 
+	 * @return The Connection object or null if one could not be opened for whatever reason
+	 */
+	public Connection getNewConnection() {
+		try{
+			// Try to connect to DB
+			return DriverManager.getConnection(url, username, password);
+		} catch (Exception e) {
+			System.err.println("Could not connect to database with :\n"
+					+ "   driver: " + jdbcDriver + "\n" + "   url   : " + url
+					+ "\n" + "   user  : " + username + "\n" + "   pass  : "
+					+ password + "\n");
+	
+			e.printStackTrace(System.err);
+	
+			return null;
+		}
+	}
+	
 }
