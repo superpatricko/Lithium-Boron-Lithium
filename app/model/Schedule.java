@@ -10,9 +10,9 @@ import java.util.List;
 
 public class Schedule {
 
-	public final Date date;
-	public final Time startTime;
-	public final Time endTime;
+	private Date date;
+	private Time startTime;
+	private Time endTime;
 
 	private Schedule(Date date, Time start, Time end){
 		this.date = date;
@@ -51,6 +51,30 @@ public class Schedule {
 		}
 
 		return scheduleList;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Time getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Time startTime) {
+		this.startTime = startTime;
+	}
+
+	public Time getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Time endTime) {
+		this.endTime = endTime;
 	}
 }
  

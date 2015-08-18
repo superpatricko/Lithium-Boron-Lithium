@@ -6,13 +6,13 @@ import java.sql.SQLException;
 
 public class Patient {
 
-	public final String firstName;
-	public final String lastName;
+	private String firstName;
+	private String lastName;
 
-	public final String medicareNumber;
-	public final String hospitalCardNumber;
+	private String medicareNumber;
+	private String hospitalCardNumber;
 
-	public final PatientRoom room;
+	private PatientRoom room;
 
 	private Patient(String fname, String lname, String medicareNumber, String hospitalCardNumber, PatientRoom room){
 		this.firstName = fname;
@@ -72,5 +72,45 @@ public class Patient {
 		}
 
 		return null;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getMedicareNumber() {
+		return medicareNumber;
+	}
+
+	public void setMedicareNumber(String medicareNumber) {
+		this.medicareNumber = medicareNumber;
+	}
+
+	public String getHospitalCardNumber() {
+		return hospitalCardNumber;
+	}
+
+	public void setHospitalCardNumber(String hospitalCardNumber) {
+		this.hospitalCardNumber = hospitalCardNumber;
+	}
+
+	public PatientRoom getRoom() {
+		return room;
+	}
+
+	public void setRoom(PatientRoom room) {
+		this.room = room;
 	}
 }

@@ -1,24 +1,24 @@
 @(patient: model.Patient)
 
-@main("Here's your stupid schedule") {
+@main("Patient Report for " + patient.getFirstName() + " " + patient.getLastName()) {
 
     @header()
 
     <div class="jumbotron">
-        <h3>Patient Summary - @patient.firstName @patient.lastName</h3>
+        <h3>Patient Summary - @patient.getFirstName() @patient.getLastName()</h3>
 
         <table class="table table-bordered">
             <tr>
                 <td>Medicare Number</td>
-                <td>@patient.medicareNumber</td>
+                <td>@patient.getMedicareNumber()</td>
             </tr>
             <tr>
                 <td>Hospital Card Number</td>
-                <td>@patient.hospitalCardNumber</td>
+                <td>@patient.getHospitalCardNumber()</td>
             </tr>
         </table>
         
-        @room(patient.room)
+        @room(patient.getRoom())
         
     </div>
 }

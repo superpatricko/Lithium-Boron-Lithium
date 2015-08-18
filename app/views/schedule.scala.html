@@ -1,6 +1,6 @@
 @(schedule: List[model.Schedule])
 
-@main("Here's your stupid schedule") {
+@main("View Schedule") {
 
     @header()
 
@@ -16,9 +16,9 @@
     </thead>
     @for(s <- schedule) {
         <tr>
-            <td>@s.date</td>
-            <td>@s.startTime</td>
-            <td>@s.endTime</td>
+            <td>@s.getDate()</td>
+            <td>@s.getStartTime()</td>
+            <td>@s.getEndTime()</td>
         </tr>
     }
     </table>

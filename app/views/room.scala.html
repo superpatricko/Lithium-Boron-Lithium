@@ -3,15 +3,15 @@
 <table class="table table-bordered">
     <tr>
         <td>Room Number</td>
-        <td>@room.roomNumber</td>
+        <td>@room.getRoomNumber()</td>
     </tr>
     <tr>
         <td>Max Capacity</td>
-        <td>@room.maxCapacity</td>
+        <td>@room.getMaxCapacity()</td>
     </tr>
     <tr>
         <td>Assigned Nurse</td>
-        <td><a href="/view/nurse/@room.nurse.employeeId">@room.nurse.firstName @room.nurse.lastName</a></td>
+        <td><a href="/view/nurse/@room.getNurse().getEmployeeId()">@room.getNurse().getFirstName() @room.getNurse().getLastName()</a></td>
     </tr>
 </table>
 
