@@ -8,7 +8,7 @@ import play.mvc.Result;
 import views.html.login;
 
 
-public class LogInOut extends Controller {
+public class LogInOutController extends Controller {
 
 	public static Result login() {
 		return ok(login.render("Please log in now"));
@@ -17,7 +17,7 @@ public class LogInOut extends Controller {
 	public static Result logout() {
 		SessionAuth.instance.endSession(session());
 		
-		return redirect(controllers.routes.LogInOut.login());
+		return redirect(controllers.routes.LogInOutController.login());
 	}
 	
 	public static Result validateLogin() {
@@ -31,7 +31,7 @@ public class LogInOut extends Controller {
 		if(s != null){
 			return redirect(controllers.routes.Application.index());
 		}else{
-			return redirect(controllers.routes.LogInOut.login());
+			return redirect(controllers.routes.LogInOutController.login());
 		}
 	}
 

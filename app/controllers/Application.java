@@ -18,7 +18,7 @@ public class Application extends Controller {
 		if (sess != null) {
 			return ok(index.render("Your new application is ready."));
 		} else {
-			return redirect(controllers.routes.LogInOut.login());
+			return redirect(controllers.routes.LogInOutController.login());
 		}
 	}
 	
@@ -30,7 +30,7 @@ public class Application extends Controller {
 			
 			return ok(schedule.render(s));			
 		}else{
-			return redirect(controllers.routes.LogInOut.login());
+			return redirect(controllers.routes.LogInOutController.login());
 		}
 	}
 
