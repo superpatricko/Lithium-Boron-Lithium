@@ -16,19 +16,19 @@ public class Application extends Controller {
 		SessionInfo sess = SessionAuth.instance.getSession(session());
 
 		if (sess != null) {
-			return ok(index.render("Your new application is ready."));
+			return ok(index.render(sess, "Your new application is ready."));
 		} else {
 			return redirect(controllers.routes.LogInOutController.login());
 		}
 	}
 	
-	public static Result viewSchedule(){		
+	public static Result viewSchedule(){
 		SessionInfo sess = SessionAuth.instance.getSession(session());
 
 		if(sess != null){
 			List<Schedule> s = Schedule.getSchedule(sess.id);
 			
-			return ok(schedule.render(s));			
+			return ok(schedule.render(sess, s));			
 		}else{
 			return redirect(controllers.routes.LogInOutController.login());
 		}

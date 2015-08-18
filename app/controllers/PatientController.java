@@ -26,7 +26,7 @@ public class PatientController extends Controller {
 
 			model.Patient p = model.Patient.get(id);
 			if(p != null){
-				return ok(patient.render(p));
+				return ok(patient.render(sess, p));
 			}else{
 				return notFound("No such patient"); // TODO
 			}

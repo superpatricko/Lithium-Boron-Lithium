@@ -1,9 +1,9 @@
-@(patient: model.Patient)
+@(session: model.SessionAuth.SessionInfo)(patient: model.Patient)
 
 @main("Patient Report for " + patient.getFirstName() + " " + patient.getLastName()) {
     <link rel="stylesheet" href='@routes.Assets.at("css/bootstrap-datetimepicker.css")'>
 }{
-    @header()
+    @header(session)
 
     <div class="jumbotron">
         <div class="panel panel-default">

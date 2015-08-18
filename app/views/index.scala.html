@@ -1,9 +1,9 @@
-@(message: String)
+@(session: model.SessionAuth.SessionInfo)(message: String)
 
 @main("COMP 353 main index") {
 }{
 
-    @header()
+    @header(session)
 
     <h1>@message</h1>
     <p>This is a test</p>

@@ -1,13 +1,31 @@
+@(session: model.SessionAuth.SessionInfo)
+
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
+
     <div class="navbar-header">
-      <a class="navbar-brand" href="/">OAMC</a>
+      @if(session != null){
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              @session.firstName @session.familyName
+              <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="@routes.Application.index()">Home</a></li>
+                <li><a href="@routes.LogInOutController.logout()">Logout</a></li>
+              </ul>
+            </li>
+        </ul>
+      }
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#do-something">Something</a></li>
-        <li><a href="/view/schedule">Schedule</a></li>
-        <li><a href="/logout">logout</a></li>
+
+        @for(link <- controllers.NavbarLinks.getLinksForSession(session) ){
+            <li><a href="@link.href">@link.name</a></li>
+        }
+
       </ul>
     </div>
   </div>

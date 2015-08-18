@@ -1,9 +1,9 @@
-@(schedule: List[model.Schedule])
+@(session: model.SessionAuth.SessionInfo)(schedule: List[model.Schedule])
 
 @main("View Schedule") {
 }{
 
-    @header()
+    @header(session)
 
     <h1>Here is your schedule</h1>
     
