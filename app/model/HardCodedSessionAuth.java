@@ -28,8 +28,13 @@ public class HardCodedSessionAuth extends SessionAuth {
 
 
 	@Override
-	protected int getEmployeeId(String username) {
-		return empIdDb.get(username);
+	protected SessionInfo getUserInfo(String username) {
+		return new SessionInfo(
+				SessionInfo.Role.Doctor,
+				username,
+				empIdDb.get(username),
+				"Hardcoded",
+				"User");
 	}
 		
 }

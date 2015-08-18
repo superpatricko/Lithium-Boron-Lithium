@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import model.SessionAuth.SessionInfo.Role;
+
 public class DatabaseSessionAuth extends SessionAuth {
 
 	@Override
@@ -29,30 +31,149 @@ public class DatabaseSessionAuth extends SessionAuth {
 		}
 	}
 
-	@Override
-	protected int getEmployeeId(String username) {
-		try {
-			PreparedStatement s = DatabaseManager.instance.createPreparedStatement("SELECT employee_id FROM user_management WHERE username=?");
+	private static interface SessionInfoBuilder {
+		public SessionInfo build(ResultSet r) throws SQLException;
+	}
+	
+	private SessionInfo getSession(String username, String queryTemplate, SessionInfoBuilder sessBuilder){
+		try{
+			ResultSet r = null;
+
+			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(queryTemplate);
 			
 			s.setString(1, username);
 			
-			ResultSet r = null;
-			try{								
+			try{
 				r = s.executeQuery();
 				
 				if(r.next()){
-					return r.getInt("employee_id");
-				}else{
-					return 0;
+					return sessBuilder.build(r);
 				}
+				
 			}finally{
-				if (r != null) r.close();
+				if(r != null){
+					r.close();
+				}
 			}
 			
-		} catch (SQLException e) {
-			e.printStackTrace(System.err);			
-			return 0;
+		}catch(SQLException e){
+			e.printStackTrace();
 		}
+		return null;
+	}
+	
+	@Override
+	protected SessionInfo getUserInfo(final String username) {
+		SessionInfo session = null;
+
+		// Try to get patient info -----------------------------------------------------
+		session = getSession(
+				username, 
+				"SELECT "
+				+ " patient_id, first_name, family_name "
+				+ " FROM user_management NATURAL JOIN patient "
+				+ " WHERE username=?",
+				new SessionInfoBuilder() {
+					@Override public SessionInfo build(ResultSet r) throws SQLException {
+						return new SessionInfo(
+							Role.Patient,
+							username,
+							r.getInt("patient_id"),
+							r.getString("first_name"),
+							r.getString("family_name"));
+					}
+				});
+		if (session != null) return session;
+		
+		// Try to get doctor info -------------------------------------------------------
+		session = getSession(
+				username,
+				"SELECT "
+				+ " employee_id, first_name, family_name, "
+				+ " is_intern, is_resident "
+				+ " FROM user_management NATURAL JOIN employee NATURAL JOIN doctor "
+				+ " WHERE username=?",
+				new SessionInfoBuilder() {
+					@Override public SessionInfo build(ResultSet r) throws SQLException {
+						Role role;
+						if(r.getBoolean("is_intern")){
+							role = Role.Intern;
+						}else if(r.getBoolean("is_resident")){
+							role = Role.Resident;
+						}else{
+							role = Role.Doctor;
+						}
+						return new SessionInfo(
+								role,
+								username,
+								r.getInt("employee_id"),
+								r.getString("first_name"),
+								r.getString("family_name"));
+						};
+					});
+		if (session != null) return session;
+		
+		// Try to get nurse info -----------------------------------------------------
+		session = getSession(
+				username,
+				"SELECT "
+				+ " employee_id, first_name, family_name, "
+				+ " is_or_nurse, is_shift_supervisor, is_playmate_nurse "
+				+ " FROM user_management NATURAL JOIN employee NATURAL JOIN nurse "
+				+ " WHERE username=?",
+				new SessionInfoBuilder() {
+					@Override public SessionInfo build(ResultSet r) throws SQLException {
+						Role role;
+						if(r.getBoolean("is_or_nurse")){
+							role = Role.OperatingRoomNurse;
+						}else if(r.getBoolean("is_shift_supervisor")){
+							role = Role.NurseShiftSupervisor;
+						}else if(r.getBoolean("is_playmate_nurse")){
+							role = Role.PlaymateNurse;
+						}else{
+							role = Role.Nurse;
+						}
+						return new SessionInfo(
+								role,
+								username,
+								r.getInt("employee_id"),
+								r.getString("first_name"),
+								r.getString("family_name"));
+						};
+					});
+		if (session != null) return session;
+
+		// Try to get director info -----------------------------------------------------
+		session = getSession(
+				username,
+				"SELECT "
+				+ " employee_id, first_name, family_name, "
+				+ " is_director, is_open_access_admin, is_senior "
+				+ " FROM user_management NATURAL JOIN employee NATURAL JOIN administrator "
+				+ " WHERE username=?",
+				new SessionInfoBuilder() {
+					@Override public SessionInfo build(ResultSet r) throws SQLException {
+						Role role;
+						if(r.getBoolean("is_director")){
+							role = Role.Director;
+						}else if(r.getBoolean("is_open_access_admin")){
+							role = Role.OpenAccessAdmin;
+						}else if(r.getBoolean("is_senior")){
+							role = Role.SeniorAdministrator;
+						}else{
+							role = Role.Administrator;
+						}
+						return new SessionInfo(
+								role,
+								username,
+								r.getInt("employee_id"),
+								r.getString("first_name"),
+								r.getString("family_name"));
+						};
+					});
+		if (session != null) return session;
+				
+		return null;
 	}
 
 }

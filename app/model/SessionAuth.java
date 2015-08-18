@@ -23,17 +23,38 @@ public abstract class SessionAuth {
 	 *
 	 */
 	public static class SessionInfo {
-		public SessionInfo(String username, int employeeId) {
+		public static enum Role {
+			Patient,
+			Doctor,
+			Resident,
+			Intern,
+			Nurse,
+			NurseShiftSupervisor,
+			Technician,
+			Director,
+			Administrator, OperatingRoomNurse, PlaymateNurse, SeniorAdministrator, OpenAccessAdmin,
+		};
+		
+		public SessionInfo(Role role, String username, int id, String firstName, String familyName) {
+			this.role = role;
 			this.username = username;
-			this.employeeId = employeeId;
+			this.id = id;
+			this.firstName = firstName;
+			this.familyName = familyName;
 		}
 		
+		public final String firstName;
+		public final String familyName;
+		public final Role role;
 		public final String username;
-		public final int employeeId;
+		public final int id;
 	}
 	
-	private static String USERNAME_KEY = "u";
-	private static String EMP_ID_KEY   = "e";	
+	private static String USERNAME_KEY    = "u";
+	private static String EMP_ID_KEY      = "e";
+	private static String ROLE_KEY        = "r";
+	private static String FIRST_NAME_KEY  = "f";
+	private static String FAMILY_NAME_KEY = "F";
 	
 	/**
 	 * Method to be implemented by subclasses to check if a given username/password pair corresponds
@@ -51,7 +72,7 @@ public abstract class SessionAuth {
 	 * @param username The username to retrieve the employee_id for
 	 * @return The employee ID
 	 */
-	protected abstract int getEmployeeId(String username);
+	protected abstract SessionInfo getUserInfo(String username);
 	
 	/**
 	 * Create a new session if the supplied username/password combination is valid
@@ -65,13 +86,14 @@ public abstract class SessionAuth {
 		if(authenticate(username, password)){
 			
 			// Get the employeeId
-			int empId = getEmployeeId(username);
+			SessionInfo sess = getUserInfo(username);
 			
-			session.put(USERNAME_KEY, username);
-			session.put(EMP_ID_KEY, Integer.toString(empId));
-			
-			SessionInfo sess =  new SessionInfo(username, empId);
-			
+			session.put(USERNAME_KEY, sess.username);
+			session.put(ROLE_KEY, sess.role.name());
+			session.put(EMP_ID_KEY, Integer.toString(sess.id));
+			session.put(FIRST_NAME_KEY, sess.firstName);
+			session.put(FAMILY_NAME_KEY, sess.familyName);
+						
 			return sess;
 			
 		}else{
@@ -86,12 +108,21 @@ public abstract class SessionAuth {
 	 * @return The current user's SessionInfo, or null if there is no logged in user for this request
 	 */
 	public SessionInfo getSession(Session session) {
+		String role       = session.get(ROLE_KEY);
 		String username   = session.get(USERNAME_KEY);
-		String employeeId = session.get(EMP_ID_KEY);
+		String id         = session.get(EMP_ID_KEY);
+		String fname      = session.get(FIRST_NAME_KEY);
+		String lname      = session.get(FAMILY_NAME_KEY);
 		
-		if(username != null && employeeId != null){
+		
+		if(username != null && id != null){
 			try{
-				return new SessionInfo(username, Integer.valueOf(employeeId));
+				return new SessionInfo(
+						SessionInfo.Role.valueOf(role),
+						username,
+						Integer.parseInt(id),
+						fname,
+						lname);
 			}catch(NumberFormatException e){
 				;
 			}

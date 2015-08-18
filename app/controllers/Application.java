@@ -26,7 +26,7 @@ public class Application extends Controller {
 		SessionInfo sess = SessionAuth.instance.getSession(session());
 
 		if(sess != null){
-			List<Schedule> s = Schedule.getSchedule(sess.employeeId);
+			List<Schedule> s = Schedule.getSchedule(sess.id);
 			
 			return ok(schedule.render(s));			
 		}else{
