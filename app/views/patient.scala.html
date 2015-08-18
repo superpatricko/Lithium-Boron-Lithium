@@ -1,7 +1,8 @@
 @(patient: model.Patient)
 
 @main("Patient Report for " + patient.getFirstName() + " " + patient.getLastName()) {
-
+    <link rel="stylesheet" href='@routes.Assets.at("css/bootstrap-datetimepicker.css")'>
+}{
     @header()
 
     <div class="jumbotron">
@@ -19,10 +20,85 @@
                         <td>Hospital Card Number</td>
                         <td>@patient.getHospitalCardNumber()</td>
                     </tr>
+                    <tr>
+                        <td>Medications</td>
+                        <td>
+                            <ul class="list-group">
+                                @for(med <- patient.getMedications()) {
+                                    <li class="list-group-item">@med.getName()</li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
                 </table>
-        
+
         @room(patient.getRoom())
         
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <form class="form-horizontal" action="@routes.PatientController.scheduleProcedure(patient.getId())" method="POST">
+
+                    <div class="form-group">
+                        <label for="service" class="col-sm-2 control-label">Service</label>
+                        <div class="col-sm-10">
+                            <select name="service" class="form-control">
+                                @for(service <- model.Service.getAllServices()){
+                                    <option value="@service.getId()">@service.getName()</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+
+                <div class="form-group">
+                    <label for="startTime" class="col-sm-2 control-label">Start Time</label>
+                    <div class="col-sm-10">
+                      <input required type="text" class="form-control datetimepicker" name="startTime" placeholder="MM/DD/YYYY H:MM xM">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="endTime" class="col-sm-2 control-label">End Time</label>
+                    <div class="col-sm-10">
+                      <input required type="text" class="form-control datetimepicker" name="endTime" placeholder="MM/DD/YYYY H:MM xM">
+                    </div>
+                  </div>
+
+                    <div class="form-group">
+                        <label for="doctor" class="col-sm-2 control-label">Doctor</label>
+                        <div class="col-sm-10">
+                            <select name="doctor" class="form-control">
+                                <option value="null">No Doctor</option>
+                                @for(doctor <- model.Doctor.getAllDoctors()){
+                                    <option value="@doctor.getEmployeeId()">@doctor.getFirstName() @doctor.getLastName()</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nurse" class="col-sm-2 control-label">Nurse</label>
+                        <div class="col-sm-10">
+                            <select name="nurse" class="form-control">
+                                <option value="null">No Nurse</option>
+                                @for(nurse <- model.Nurse.getAllNurses()){
+                                    <option value="@nurse.getEmployeeId()">@nurse.getFirstName() @nurse.getLastName()</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="col-sm-10">
+                        <button type="submit" class="btn btn-default">Submit</button>
+                      </div>
+                    </div>
+
+                  </form>
+
             </div>
         </div>
 
@@ -63,4 +139,15 @@
         }
 
     </div>
+}{
+    <script src='@routes.Assets.at("js/moment.min.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.at("js/bootstrap-datetimepicker.js")' type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.datetimepicker').datetimepicker({});
+            $(".datetimepicker[name=startTime]").data("DateTimePicker").format("DD/MM/YYYY, h:mm:ssa");
+            $(".datetimepicker[name=endTime]").data("DateTimePicker").format("DD/MM/YYYY, h:mm:ssa");
+        });
+    </script>
 }

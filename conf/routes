@@ -13,7 +13,9 @@ POST    /login                      controllers.LogInOutController.validateLogin
 GET     /logout                     controllers.LogInOutController.logout()
 
 # Patient
-GET     /view/patient/:id           controllers.PatientController.view(id : Int)
+GET     /patient/view/:id           controllers.PatientController.view(id : Int)
+POST    /patient/schedule-procedure/:id controllers.PatientController.scheduleProcedure(id : Int)
+
 
 # Nurse
 GET     /view/nurse/:id             controllers.NurseController.view(id : Int)

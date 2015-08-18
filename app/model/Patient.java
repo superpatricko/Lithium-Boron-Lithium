@@ -18,6 +18,7 @@ public class Patient {
 	private PatientRoom room;
 
 	private List<ServiceRecord> serviceRecords;
+	private List<Medication> medications;
 
 	private final int id;
 	
@@ -29,6 +30,11 @@ public class Patient {
 		this.hospitalCardNumber = hospitalCardNumber;
 		this.room = room;
 		this.serviceRecords = null;
+		this.medications = null;
+	}
+	
+	public Patient(int id){
+		this(id, null, null, null, null, null);
 	}
 
 	public static Patient get(int id){
@@ -84,6 +90,45 @@ public class Patient {
 		return null;
 	}
 
+	public List<Medication> getMedications(){
+		if(medications != null){
+			return medications;
+		}else{
+			List<Medication> meds = new LinkedList<Medication>();
+			
+			try{
+				PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
+					"SELECT name, supply_id FROM "+
+					"    patient_medication "+
+					"    JOIN "+
+					"        supply  "+
+					"            ON supply.supply_id=patient_medication.medication_supply_id "+
+					"WHERE patient_id=?");
+				
+				s.setInt(1, id);
+				
+				ResultSet r = null;
+				
+				r = s.executeQuery();
+				
+				try{
+					while(r.next()){
+						meds.add(new Medication(
+								r.getInt("supply_id"),
+								r.getString("name")));
+					}
+					
+					return (medications = meds);
+				}finally{
+					if (r != null) r.close();
+				}
+			}catch(SQLException e){
+				e.printStackTrace();
+				return new LinkedList<Medication>();
+			}
+		}
+	}
+	
 	public List<ServiceRecord> getServiceRecords(){
 		if(serviceRecords != null){
 			return serviceRecords;
@@ -113,7 +158,7 @@ public class Patient {
 						"		LEFT JOIN"+
 						"	Employee AS Nurse  ON Nurse.employee_id=Service_Log.nurse_id "+
 						"WHERE Service_Log.patient_id=?"
-						+ " ORDER BY service_start ");
+						+ " ORDER BY service_start DESC");
 
 				s.setInt(1, id);
 
@@ -205,5 +250,9 @@ public class Patient {
 
 	public void setRoom(PatientRoom room) {
 		this.room = room;
+	}
+
+	public int getId() {
+		return id;
 	}
 }
