@@ -34,7 +34,7 @@ public class Schedule {
 
 		try {
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
-					"SELECT start_date_time, end_date_time FROM Schedule WHERE employee_id=? ORDER BY start_date_time ");
+					"SELECT start_time, end_time FROM Schedule WHERE employee_id=? ORDER BY start_time ");
 
 			s.setInt(1, employeeId);
 
@@ -46,8 +46,8 @@ public class Schedule {
 
 				while(r.next()){
 					scheduleList.add(new Schedule(
-							r.getTimestamp("start_date_time"),
-							r.getTimestamp("end_date_time")));
+							r.getTimestamp("start_time"),
+							r.getTimestamp("end_time")));
 				}
 
 			}finally{

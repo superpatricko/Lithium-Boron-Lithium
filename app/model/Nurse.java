@@ -133,11 +133,16 @@ public class Nurse extends Employee {
 					"	( ? BETWEEN start_date_time AND end_date_time ) "+
 					"	OR "+
 					"    ( ? BETWEEN start_date_time AND end_date_time ) "+
-					"    )");
+					"   OR "
+					+ "  (start_date_time BETWEEN ? AND ?)  "
+					+ ""
+					+ ")");
 			
 			hasConflict.setInt(1, getEmployeeId());
 			hasConflict.setTimestamp(2, startTime);
 			hasConflict.setTimestamp(3, endTime);
+			hasConflict.setTimestamp(4, startTime);
+			hasConflict.setTimestamp(5, endTime);
 			
 			r = null;
 			try{

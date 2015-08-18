@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,9 +105,66 @@ public class Doctor extends Employee {
 		this.lastName = lastName;
 	}
 
+	/**
+	 * Attempt to schedule a service for a Doctor. This should check that the Doctor does
+	 * not already have a schedule item which conflicts with this one, and should write a 
+	 * new schedule entry if that is the case.
+	 * 
+	 * @param start The start of the time for this service
+	 * @param end The end of the time for this service
+	 * @param conn The Connection object to use. It is assumed this is called as part of a larger transaction.
+	 * @return True if there was no conflict and the new entry was successfully written, false otherwise
+	 */
 	public boolean scheduleService(Date start, Date end, Connection conn) {
-		// TODO Auto-generated method stub
-		return true;
+		
+		Timestamp startTime = new Timestamp(start.getTime());
+		Timestamp endTime   = new Timestamp(end.getTime());
+		
+		try{
+			PreparedStatement hasConflict = conn.prepareStatement(
+					"SELECT * FROM schedule "+
+					" WHERE employee_id=? "+
+					" AND   ( "+
+					"	( ? BETWEEN start_time AND end_time ) "+
+					"	OR "+
+					"    ( ? BETWEEN start_time AND end_time ) "+
+					"   OR"
+					+ "  ( start_time BETWEEN ? AND ? ) "
+					+ " )");
+			
+			hasConflict.setInt(1, getEmployeeId());
+			hasConflict.setTimestamp(2, startTime);
+			hasConflict.setTimestamp(3, endTime);
+			hasConflict.setTimestamp(4, startTime);
+			hasConflict.setTimestamp(5, endTime);
+			
+			ResultSet r = null;
+			try{
+				r = hasConflict.executeQuery();
+				if(r.next()){
+					return false; // There is a conflict!!
+				}
+			}finally{
+				if(r != null)r.close();
+			}
+			
+			PreparedStatement insertSchedule = conn.prepareStatement("INSERT INTO schedule (employee_id, start_time, end_time) VALUES (?,?,?)");
+			
+			insertSchedule.setInt(1, getEmployeeId());
+			insertSchedule.setTimestamp(2, startTime);
+			insertSchedule.setTimestamp(3, endTime);
+			
+			if(1 == insertSchedule.executeUpdate()){
+				return true; // insert worked!
+			}else{
+				return false; // somehow the insert did not work
+			}
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 
 
