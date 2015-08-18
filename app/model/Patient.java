@@ -1,8 +1,10 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -295,5 +297,56 @@ public class Patient {
 
 	public int getId() {
 		return id;
+	}
+
+	/**
+	 * Attempt to schedule a service for a patient. This does not actually write anything,
+	 * it simply checks that there is not already a conflicting service scheduled.
+	 * 
+	 * @param start The start of the service to be scheduled
+	 * @param end The end of the service to be scheduled
+	 * @param conn The Connection object to use to make queries, it's assumed we're probably inside a transaction when we do this.
+	 * @return True if there is no conflict false if there is or if an error occurs.
+	 */
+	public boolean scheduleService(Date start, Date end, Connection conn) {
+
+		Timestamp startTime = new Timestamp(start.getTime());
+		Timestamp endTime   = new Timestamp(end.getTime());
+		
+		try{
+			PreparedStatement hasConflict = conn.prepareStatement(
+					"SELECT * FROM service_log "+
+					" WHERE patient_id=? "+
+					" AND   ( "+
+					"	( ? BETWEEN start_date_time AND end_date_time ) "+
+					"	OR "+
+					"    ( ? BETWEEN start_date_time AND end_date_time ) "+
+					"   OR "
+					+ "  (start_date_time BETWEEN ? AND ?)  "
+					+ ""
+					+ ")");
+			
+			hasConflict.setInt(1, getId());
+			hasConflict.setTimestamp(2, startTime);
+			hasConflict.setTimestamp(3, endTime);
+			hasConflict.setTimestamp(4, startTime);
+			hasConflict.setTimestamp(5, endTime);
+			
+			ResultSet r = null;
+			try{
+				r = hasConflict.executeQuery();
+				if(r.next()){
+					return false; // There is a conflicting service scheduled
+				}
+			}finally{
+				if(r != null)r.close();
+			}
+			
+			return true;
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

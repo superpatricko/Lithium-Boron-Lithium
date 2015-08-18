@@ -74,6 +74,10 @@ public class ServiceRecord {
 				return Status.DOCTOR_UNAVAILABLE;
 			}
 			
+			if(!patient.scheduleService(start, end, conn)){
+				conn.rollback();
+				return Status.PATIENT_UNAVAILABLE;
+			}
 			
 			PreparedStatement s = conn.prepareStatement(""
 					+ "INSERT INTO service_log "
