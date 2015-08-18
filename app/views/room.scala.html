@@ -1,0 +1,17 @@
+@(room: model.PatientRoom)
+
+<table class="table table-bordered">
+    <tr>
+        <td>Room Number</td>
+        <td>@room.roomNumber</td>
+    </tr>
+    <tr>
+        <td>Max Capacity</td>
+        <td>@room.maxCapacity</td>
+    </tr>
+    <tr>
+        <td>Assigned Nurse</td>
+        <td><a href="/view/nurse/@room.nurse.employeeId">@room.nurse.firstName @room.nurse.lastName</a></td>
+    </tr>
+</table>
+

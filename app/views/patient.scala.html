@@ -1,0 +1,24 @@
+@(patient: model.Patient)
+
+@main("Here's your stupid schedule") {
+
+    @header()
+
+    <div class="jumbotron">
+        <h3>Patient Summary - @patient.firstName @patient.lastName</h3>
+
+        <table class="table table-bordered">
+            <tr>
+                <td>Medicare Number</td>
+                <td>@patient.medicareNumber</td>
+            </tr>
+            <tr>
+                <td>Hospital Card Number</td>
+                <td>@patient.hospitalCardNumber</td>
+            </tr>
+        </table>
+        
+        @room(patient.room)
+        
+    </div>
+}
