@@ -10,9 +10,6 @@ import play.mvc.Http.Session;
  */
 public abstract class SessionAuth {
 	
-	// TODO - more info about the current user (their role, their full name)
-	// TODO - support patients logging in too!!
-	
 	public final static SessionAuth instance = new DatabaseSessionAuth();
 	protected SessionAuth(){}
 	
