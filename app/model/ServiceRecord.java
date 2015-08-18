@@ -74,10 +74,6 @@ public class ServiceRecord {
 				return Status.DOCTOR_UNAVAILABLE;
 			}
 			
-			if(! patient.scheduleService(start, end, conn)){
-				conn.rollback();
-				return Status.PATIENT_UNAVAILABLE;
-			}
 			
 			PreparedStatement s = conn.prepareStatement(""
 					+ "INSERT INTO service_log "
@@ -128,11 +124,8 @@ public class ServiceRecord {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (conn != null) {
-				conn.close();
-			}
 		}
+		return Status.ERROR;
 	}
 
 	public Nurse getNurse() {

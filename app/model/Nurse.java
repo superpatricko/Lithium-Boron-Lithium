@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -96,11 +97,63 @@ public class Nurse extends Employee {
 	 * @param start The start time of the service to be scheduled
 	 * @param end The end time of the service to be scheduled
 	 * @param conn The connection object to use (because this may need to be run inside a transaction)
-	 * @return True if the service can be scheduled, false otherwise
+	 * @return True if the service can be scheduled, false otherwise, or if there is any error
 	 */
 	public boolean scheduleService(Date start, Date end, Connection conn) {
 		
+		Timestamp startTime = new Timestamp(start.getTime());
+		Timestamp endTime   = new Timestamp(end.getTime());
 		
+		try{
+			PreparedStatement hasAvailableShift = conn.prepareStatement("SELECT * FROM schedule WHERE"+
+					" employee_id=? "+
+					" AND "+
+					" start_time < ? "+
+					" AND "+
+					" end_time > ? ");
+			
+			hasAvailableShift.setInt(1, getEmployeeId());
+			hasAvailableShift.setTimestamp(2, startTime);
+			hasAvailableShift.setTimestamp(3, endTime);
+			
+			ResultSet r = null;
+			try{
+				r = hasAvailableShift.executeQuery();
+				if(! r.next()){
+					return false; // There is no available shift
+				}
+			}finally{
+				if(r != null)r.close();
+			}
+			
+			PreparedStatement hasConflict = conn.prepareStatement(
+					"SELECT * FROM service_log "+
+					" WHERE nurse_id=? "+
+					" AND   ( "+
+					"	( ? BETWEEN start_date_time AND end_date_time ) "+
+					"	OR "+
+					"    ( ? BETWEEN start_date_time AND end_date_time ) "+
+					"    )");
+			
+			hasConflict.setInt(1, getEmployeeId());
+			hasConflict.setTimestamp(2, startTime);
+			hasConflict.setTimestamp(3, endTime);
+			
+			r = null;
+			try{
+				r = hasConflict.executeQuery();
+				if(r.next()){
+					return false; // There is a conflicting service scheduled
+				}
+			}finally{
+				if(r != null)r.close();
+			}
+			
+			return true;
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 		return false;
 	}
 

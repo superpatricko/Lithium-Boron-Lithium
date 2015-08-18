@@ -3,7 +3,6 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,12 +15,10 @@ import java.util.List;
  */
 public class Schedule {
 
-	private Date date;
-	private Time startTime;
-	private Time endTime;
+	private Date startTime;
+	private Date endTime;
 
-	private Schedule(Date date, Time start, Time end){
-		this.date = date;
+	private Schedule(Date start, Date end){
 		this.startTime = start;
 		this.endTime = end;
 	}
@@ -37,7 +34,7 @@ public class Schedule {
 
 		try {
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
-					"SELECT date, start_time, end_time FROM Schedule WHERE employee_id=? ORDER BY date, start_time");
+					"SELECT start_date_time, end_date_time FROM Schedule WHERE employee_id=? ORDER BY start_date_time ");
 
 			s.setInt(1, employeeId);
 
@@ -49,9 +46,8 @@ public class Schedule {
 
 				while(r.next()){
 					scheduleList.add(new Schedule(
-							r.getDate("date"),
-							r.getTime("start_time"), 
-							r.getTime("end_time")));
+							r.getTimestamp("start_date_time"),
+							r.getTimestamp("end_date_time")));
 				}
 
 			}finally{
@@ -65,27 +61,20 @@ public class Schedule {
 		return scheduleList;
 	}
 
-	public Date getDate() {
-		return date;
-	}
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public Time getStartTime() {
+	public Date getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Time startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 
-	public Time getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Time endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 }

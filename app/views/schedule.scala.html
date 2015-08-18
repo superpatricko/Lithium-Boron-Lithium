@@ -10,14 +10,12 @@
     <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Date</th>
             <th>Start Time</th>
             <th>End Time</th>
         </tr>
     </thead>
     @for(s <- schedule) {
         <tr>
-            <td>@s.getDate()</td>
             <td>@s.getStartTime()</td>
             <td>@s.getEndTime()</td>
         </tr>

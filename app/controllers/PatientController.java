@@ -68,10 +68,13 @@ public class PatientController extends Controller {
 				
 				sr.setPatient(new Patient(id));
 				
-				sr.writeToDb();
+				ServiceRecord.Status status = sr.writeToDb();
 				
-				return redirect(controllers.routes.PatientController.view(id));
-				
+				if(status == ServiceRecord.Status.SUCCESS){
+					return redirect(controllers.routes.PatientController.view(id));
+				}else{
+					return internalServerError(status.name());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				return Results.internalServerError(e.toString());

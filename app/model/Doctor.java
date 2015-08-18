@@ -1,8 +1,10 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -100,6 +102,11 @@ public class Doctor extends Employee {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public boolean scheduleService(Date start, Date end, Connection conn) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 
