@@ -44,7 +44,7 @@ public class PatientController extends Controller {
 				DynamicForm form = form().bindFromRequest();
 				
 				// It took way to long to make this date format match the JS date format... :P
-				DateFormat format = new SimpleDateFormat("dd/MM/yyyy, h:mm:ssa");
+				DateFormat format = new SimpleDateFormat("dd/MM/yyyy, h:mma");
 				
 				Date start = format.parse(form.get("startTime"));
 				Date end   = format.parse(form.get("endTime"));
@@ -66,7 +66,7 @@ public class PatientController extends Controller {
 				
 				sr.writeToDb();
 				
-				return ok(start + "\n" + end);
+				return redirect(controllers.routes.PatientController.view(id));
 				
 			} catch (Exception e) {
 				e.printStackTrace();
