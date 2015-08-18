@@ -6,25 +6,40 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Class representing a Nurse in the database. Very similar to {@link Doctor}
+ * 
+ * @author gordon
+ *
+ */
 public class Nurse extends Employee {
 
 	private String firstName;
 	private String lastName;
 
+	/**
+	 * @see Doctor#Doctor(int, String, String)
+	 */
 	public Nurse(int employeeId, String firstName, String lastName) {
 		super(employeeId);
 		this.firstName = firstName;
 		this.lastName  = lastName;
 	}
 
+	/**
+	 * @see Doctor#Doctor(int)
+	 */
 	public Nurse(int employeeId) {
 		super(employeeId);
 		this.firstName = null;
 		this.lastName  = null;
 	}
 	
+	/**
+	 * @see Doctor#getAllDoctors()
+	 */
 	public static List<Nurse> getAllNurses(){
-		List<Nurse> nurse = new LinkedList<Nurse>();
+		List<Nurse> nurses = new LinkedList<Nurse>();
 		
 		try{
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
@@ -36,11 +51,9 @@ public class Nurse extends Employee {
 				r = s.executeQuery();
 				
 				while(r.next()){
-					nurse.add(new Nurse(r.getInt("employee_id"), r.getString("first_name"), r.getString("family_name")));
+					nurses.add(new Nurse(r.getInt("employee_id"), r.getString("first_name"), r.getString("family_name")));
 				}
-				
-				return nurse;
-				
+								
 			}finally{
 				if (r != null) r.close();
 			}
@@ -48,7 +61,7 @@ public class Nurse extends Employee {
 			e.printStackTrace();
 		}
 		
-		return null;
+		return nurses;
 		
 	}
 

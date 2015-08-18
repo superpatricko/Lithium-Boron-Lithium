@@ -6,6 +6,12 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Class representing a service in the database
+ * 
+ * @author gordon
+ *
+ */
 public class Service {
 
 	private int id;
@@ -25,8 +31,15 @@ public class Service {
 		this.cost = null;
 	}
 
+	/**
+	 * Get all Services in the hospital.
+	 * 
+	 * @return a List of Service objects, or an empty list on an error, never null
+	 */
 	public static List<Service> getAllServices(){
 		List<Service> services = new LinkedList<Service>();
+		
+		// TODO - optionally filter only active services
 		
 		try {
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement("SELECT name, service_id, cost FROM service");

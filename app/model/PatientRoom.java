@@ -1,5 +1,11 @@
 package model;
 
+/**
+ * Class representing a patient room in the database
+ * 
+ * @author gordon
+ *
+ */
 public class PatientRoom {
 
 	private String roomNumber;

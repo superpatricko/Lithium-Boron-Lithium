@@ -38,6 +38,8 @@ public class PatientController extends Controller {
 	public static Result scheduleProcedure(int id){
 		SessionInfo sess = SessionAuth.instance.getSession(session());
 		
+		// TODO - add it to the doctor's schedule
+		
 		if(sess != null){
 
 			try {
@@ -52,6 +54,8 @@ public class PatientController extends Controller {
 				Integer doctorId;
 				Integer nurseId;
 				
+				// Try to parse the doctor and nurse IDs, if No [Nurse|Doctor] was selected, then they will not
+				// be a parsable value so we set it to null.
 				try{ doctorId = Integer.parseInt(form.get("doctor")); }catch(NumberFormatException e){ doctorId = null; }
 				try{ nurseId = Integer.parseInt(form.get("nurse"));   }catch(NumberFormatException e){ nurseId = null; }
 				

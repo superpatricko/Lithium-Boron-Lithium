@@ -8,6 +8,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Class representing an item in an employee's schedule (a shift basically)u
+ * 
+ * @author gordon
+ *
+ */
 public class Schedule {
 
 	private Date date;
@@ -20,6 +26,12 @@ public class Schedule {
 		this.endTime = end;
 	}
 
+	/**
+	 * Get all scheduled work times for the given employee
+	 * 
+	 * @param employeeId The employee ID to get the schedule for
+	 * @return A list of Schedule objects, or an empty list if there was an error, never null
+	 */
 	public static List<Schedule> getSchedule(int employeeId){		
 		List<Schedule> scheduleList = new LinkedList<Schedule>();
 

@@ -6,6 +6,11 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Date;
 
+/**
+ * Class representing a ServiceRecord in the database
+ * @author gordon
+ *
+ */
 public class ServiceRecord {
 
 	private Nurse nurse;
@@ -17,6 +22,16 @@ public class ServiceRecord {
 	
 	private Patient patient;
 	
+	/**
+	 * Create a new service record Object. Used both for retrieving values, and for creating and
+	 * subsequently saving Service Records.
+	 * 
+	 * @param start The start time of the ServiceRecord
+	 * @param end The end time of the ServiceRecord
+	 * @param service The service to be performed (must not be null)
+	 * @param doctor The doctor to perform the service (may be null)
+	 * @param nurse The nurse to perform the service (may be null)
+	 */
 	public ServiceRecord(Date start, Date end, Service service, Doctor doctor, Nurse nurse) {
 		this.nurse = nurse;
 		this.doctor = doctor;
@@ -25,7 +40,16 @@ public class ServiceRecord {
 		this.end   = end;
 	}
 	
+	/**
+	 * Save this ServiceRecord to the database. Assumes this is a new ServiceRecord, so INSERTs a 
+	 * new row. 
+	 * 
+	 * Assumes that the service, and optional doctor and nurse already exist in the database.
+	 */
 	public void writeToDb(){
+		
+		// TODO - ensure that there are no time conflicts for doctors!!! (hmmmmmm)
+		
 		try {
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(""
 					+ "INSERT INTO service_log "

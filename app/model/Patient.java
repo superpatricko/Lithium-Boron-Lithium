@@ -7,6 +7,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Class representing a Patient in the DB
+ * 
+ * @author gordon
+ *
+ */
 public class Patient {
 
 	private String firstName;
@@ -22,6 +28,9 @@ public class Patient {
 
 	private final int id;
 	
+	/**
+	 * Creates a Patient with fields properly filled out
+	 */
 	private Patient(int id, String fname, String lname, String medicareNumber, String hospitalCardNumber, PatientRoom room){
 		this.id = id;
 		this.firstName = fname;
@@ -33,10 +42,23 @@ public class Patient {
 		this.medications = null;
 	}
 	
+	/**
+	 * Create a patient with only an ID. The purpose of this is the same as {@link Doctor#Doctor(int)}
+	 * @param id
+	 */
 	public Patient(int id){
 		this(id, null, null, null, null, null);
 	}
 
+	/**
+	 * Get a fully populated Patient object for the given Patient ID.
+	 * 
+	 * This makes a query to retrieve all the info about the Patient, the room they're assigned to,
+	 * and the Nurse that is assigned to their room.
+	 * 
+	 * @param id The id of the patient to retrieve info about
+	 * @return A fully filled Patient object, or null if there is no patient with the given ID
+	 */
 	public static Patient get(int id){
 
 		try {
@@ -90,6 +112,14 @@ public class Patient {
 		return null;
 	}
 
+	/**
+	 * Retrieve a list of medications for this patient.
+	 * 
+	 * The first time this is called it makes a query to retrieve the medications and
+	 * caches the result. Subsequent calls use the saved list of medications.
+	 * 
+	 * @return A list of {@link Medication}s, or an empty list if there is an error, never null.
+	 */
 	public List<Medication> getMedications(){
 		if(medications != null){
 			return medications;
@@ -118,17 +148,30 @@ public class Patient {
 								r.getString("name")));
 					}
 					
-					return (medications = meds);
 				}finally{
 					if (r != null) r.close();
 				}
 			}catch(SQLException e){
 				e.printStackTrace();
-				return new LinkedList<Medication>();
 			}
+			
+			return (medications = meds);
 		}
 	}
 	
+	/**
+	 * Retrieve a list of {@link ServiceRecord}s that the current Patient is associated to. These
+	 * can either be ones scheduled for the future, or ones that are in the past, or ones that are
+	 * currently happening.
+	 * 
+	 * The first time this is called it makes a query for all of the records and caches the result.
+	 * Subsequent calls, the saved result is returned.
+	 * 
+	 * Retrieves info about the ServiceRecord, as well as the associated Doctor (if any), Nurse (if any)
+	 * and the Service to be performed.
+	 * 
+	 * @return A list of ServiceRecord objects, or an empty list if there is an error, never null
+	 */
 	public List<ServiceRecord> getServiceRecords(){
 		if(serviceRecords != null){
 			return serviceRecords;
@@ -198,7 +241,6 @@ public class Patient {
 
 					}
 
-					return (serviceRecords = records);
 				}finally{
 					if (r != null) r.close();
 				}
@@ -206,9 +248,8 @@ public class Patient {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			return (serviceRecords = records);
 		}
-
-		return null;
 	}
 
 
