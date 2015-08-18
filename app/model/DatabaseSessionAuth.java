@@ -11,7 +11,7 @@ public class DatabaseSessionAuth extends SessionAuth {
 	@Override
 	protected boolean authenticate(String username, String password) {
 		try {
-			PreparedStatement s = DatabaseManager.instance.createPreparedStatement("SELECT * FROM user_management WHERE username=? AND password=?");
+			PreparedStatement s = DatabaseManager.instance.createPreparedStatement("SELECT * FROM intranet_account WHERE username=? AND password=?");
 			
 			s.setString(1, username);
 			s.setString(2, password);
@@ -71,7 +71,7 @@ public class DatabaseSessionAuth extends SessionAuth {
 				username, 
 				"SELECT "
 				+ " patient_id, first_name, family_name "
-				+ " FROM user_management NATURAL JOIN patient "
+				+ " FROM intranet_account NATURAL JOIN patient "
 				+ " WHERE username=?",
 				new SessionInfoBuilder() {
 					@Override public SessionInfo build(ResultSet r) throws SQLException {
@@ -91,7 +91,7 @@ public class DatabaseSessionAuth extends SessionAuth {
 				"SELECT "
 				+ " employee_id, first_name, family_name, "
 				+ " is_intern, is_resident "
-				+ " FROM user_management NATURAL JOIN employee NATURAL JOIN doctor "
+				+ " FROM intranet_account NATURAL JOIN employee NATURAL JOIN doctor "
 				+ " WHERE username=?",
 				new SessionInfoBuilder() {
 					@Override public SessionInfo build(ResultSet r) throws SQLException {
@@ -119,7 +119,7 @@ public class DatabaseSessionAuth extends SessionAuth {
 				"SELECT "
 				+ " employee_id, first_name, family_name, "
 				+ " is_or_nurse, is_shift_supervisor, is_playmate_nurse "
-				+ " FROM user_management NATURAL JOIN employee NATURAL JOIN nurse "
+				+ " FROM intranet_account NATURAL JOIN employee NATURAL JOIN nurse "
 				+ " WHERE username=?",
 				new SessionInfoBuilder() {
 					@Override public SessionInfo build(ResultSet r) throws SQLException {
@@ -149,7 +149,7 @@ public class DatabaseSessionAuth extends SessionAuth {
 				"SELECT "
 				+ " employee_id, first_name, family_name, "
 				+ " is_director, is_open_access_admin, is_senior "
-				+ " FROM user_management NATURAL JOIN employee NATURAL JOIN administrator "
+				+ " FROM intranet_account NATURAL JOIN employee NATURAL JOIN administrator "
 				+ " WHERE username=?",
 				new SessionInfoBuilder() {
 					@Override public SessionInfo build(ResultSet r) throws SQLException {
