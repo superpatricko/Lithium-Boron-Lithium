@@ -1,6 +1,7 @@
 # Ignore Play! working directory #
 bin/
 /db
+.classpath
 .eclipse
 /logs/
 /modules
@@ -17,3 +18,4 @@ server.pid
 *.class
 .target
 .DS_Store
+conf/application.conf
