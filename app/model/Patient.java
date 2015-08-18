@@ -3,6 +3,9 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Patient {
 
@@ -14,12 +17,18 @@ public class Patient {
 
 	private PatientRoom room;
 
-	private Patient(String fname, String lname, String medicareNumber, String hospitalCardNumber, PatientRoom room){
+	private List<ServiceRecord> serviceRecords;
+
+	private final int id;
+	
+	private Patient(int id, String fname, String lname, String medicareNumber, String hospitalCardNumber, PatientRoom room){
+		this.id = id;
 		this.firstName = fname;
 		this.lastName = lname;
 		this.medicareNumber = medicareNumber;
 		this.hospitalCardNumber = hospitalCardNumber;
 		this.room = room;
+		this.serviceRecords = null;
 	}
 
 	public static Patient get(int id){
@@ -28,7 +37,7 @@ public class Patient {
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
 					"SELECT medicare_number, hospital_card_number, "
 					+ " Patient.first_name as patient_fname, Patient.family_name AS patient_lname, "
-					+ "room_number, max_capcity AS max_capacity, "                              // patient_room
+					+ "room_number, max_capacity, "                              // patient_room
 					+ "nurse.first_name AS nurse_fname, nurse.family_name AS nurse_lname, nurse.employee_id as nurse_eid "  // nurse details
 					+ " FROM Patient, Patient_Room, Employee AS nurse "
 					+ "WHERE Patient.patient_id=? "
@@ -54,6 +63,7 @@ public class Patient {
 							nurse);
 
 					Patient patient = new Patient(
+							id,
 							r.getString("patient_fname"),
 							r.getString("patient_lname"),
 							r.getString("medicare_number"),
@@ -73,6 +83,89 @@ public class Patient {
 
 		return null;
 	}
+
+	public List<ServiceRecord> getServiceRecords(){
+		if(serviceRecords != null){
+			return serviceRecords;
+		}else{
+			List<ServiceRecord> records = new LinkedList<ServiceRecord>();
+
+			try {
+				PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
+						"SELECT "+
+						"	Service_Log.start_date_time AS service_start,"+
+						"	Service_Log.end_date_time AS service_end,"+
+						"	Service.service_id AS service_id,"+
+						"	Service.name AS service_name,"+
+						"	Service.cost AS service_cost,"+
+						"	Doctor.first_name AS doctor_fname,"+
+						"	Doctor.family_name  AS doctor_lname,"+
+						"	Doctor.employee_id AS doctor_id,"+
+						"	Nurse.first_name AS nurse_fname,"+
+						"	Nurse.family_name AS nurse_lname,"+
+						"	Nurse.employee_id AS nurse_id"+
+						" FROM "+
+						"	Service_Log "+
+						"		JOIN"+
+						"	Service ON Service.service_id=Service_Log.service_id"+
+						"		LEFT JOIN "+
+						"	Employee AS Doctor ON Doctor.employee_id=Service_Log.doctor_id "+
+						"		LEFT JOIN"+
+						"	Employee AS Nurse  ON Nurse.employee_id=Service_Log.nurse_id "+
+						"WHERE Service_Log.patient_id=?"
+						+ " ORDER BY service_start ");
+
+				s.setInt(1, id);
+
+				ResultSet r = null;
+
+				try{
+					r = s.executeQuery();
+
+					while(r.next()){
+						Nurse nurse = null;
+						int nurseId = r.getInt("nurse_id");
+						if( ! r.wasNull()){
+							nurse = new Nurse(
+								nurseId,
+								r.getString("nurse_fname"),
+								r.getString("nurse_lname"));
+						}
+
+						Doctor doctor = null;
+						int doctorId = r.getInt("doctor_id");
+						if( ! r.wasNull()){
+							doctor = new Doctor(
+									doctorId,
+									r.getString("doctor_fname"),
+									r.getString("doctor_lname"));
+						}
+
+						Service service = new Service(
+								r.getInt("service_id"),
+								r.getString("service_name"),
+								r.getString("service_cost"));
+
+						records.add(new ServiceRecord(
+							 	new Date(r.getTimestamp("service_start").getTime()),
+							 	new Date(r.getTimestamp("service_end").getTime()),
+								service, doctor, nurse));
+
+					}
+
+					return (serviceRecords = records);
+				}finally{
+					if (r != null) r.close();
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return null;
+	}
+
 
 	public String getFirstName() {
 		return firstName;

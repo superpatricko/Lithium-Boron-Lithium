@@ -5,20 +5,62 @@
     @header()
 
     <div class="jumbotron">
-        <h3>Patient Summary - @patient.getFirstName() @patient.getLastName()</h3>
+        <div class="panel panel-default">
+            <div class="panel-body">
 
-        <table class="table table-bordered">
-            <tr>
-                <td>Medicare Number</td>
-                <td>@patient.getMedicareNumber()</td>
-            </tr>
-            <tr>
-                <td>Hospital Card Number</td>
-                <td>@patient.getHospitalCardNumber()</td>
-            </tr>
-        </table>
+                <h3>Patient Summary - @patient.getFirstName() @patient.getLastName()</h3>
+
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Medicare Number</td>
+                        <td>@patient.getMedicareNumber()</td>
+                    </tr>
+                    <tr>
+                        <td>Hospital Card Number</td>
+                        <td>@patient.getHospitalCardNumber()</td>
+                    </tr>
+                </table>
         
         @room(patient.getRoom())
         
+            </div>
+        </div>
+
+        @for(record <- patient.getServiceRecords()) {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>@record.getService().getName()</h4>
+
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Started</td>
+                            <td>@record.getStart()</td>
+                        </tr>
+                        <tr>
+                            <td>Completed</td>
+                            <td>@record.getEnd()</td>
+                        </tr>
+
+                        @if(record.getDoctor() != null){
+                            <tr>
+                                <td>Doctor</td>
+                                <td><a href="/view/doctor/@record.getDoctor().getEmployeeId()">@record.getDoctor().getFirstName() @record.getDoctor().getLastName()</a></td>
+                            </tr>
+                        }
+
+                        @if(record.getNurse() != null){
+                            <tr>
+                                <td>Nurse</td>
+                                <td><a href="/view/nurse/@record.getNurse().getEmployeeId()">@record.getNurse().getFirstName() @record.getNurse().getLastName()</a></td>
+                            </tr>
+                        }
+
+                    </table>
+
+
+                </div>
+            </div>
+        }
+
     </div>
 }
