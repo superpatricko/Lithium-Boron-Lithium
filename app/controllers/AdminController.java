@@ -21,6 +21,7 @@ public class AdminController extends Controller{
 	 }
 	 public static Result deleteService(){
 		 DynamicForm f= form().bindFromRequest();
+		 System.out.println("hello");
 		 int idToDelete = Integer.parseInt(f.get("deleteService"));
 		 System.out.println(idToDelete);
 		 admin.deleteId(idToDelete);
