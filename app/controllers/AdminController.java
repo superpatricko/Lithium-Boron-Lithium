@@ -48,6 +48,11 @@ public class AdminController extends Controller{
 		 return ok (views.html.reports.render(s,admin.getAllReports()));
 		// return TODO;
 	 }
+	 public static Result addService(){
+		 SessionInfo s =SessionAuth.instance.getSession(session());
+		 //DynamicForm f= form().bindFromRequest();
+		 return ok(AddService.render(s));
+	 }
 	
 	
 	
