@@ -12,6 +12,7 @@ public class Employee {
 	// TODO - first and family names should be stored here, not in derived classes
 	
 	private int employeeId;
+	private Payroll payroll_id;
 
 	public Employee(int employeeId) {
 		this.employeeId = employeeId;
@@ -23,6 +24,14 @@ public class Employee {
 
 	public void setEmployeeId(int employeeId) {
 		this.employeeId = employeeId;
+	}
+
+	public Payroll getPayroll_id() {
+		return payroll_id;
+	}
+
+	public void setPayroll_id(Payroll payroll_id) {
+		this.payroll_id = payroll_id;
 	}
 
 }
