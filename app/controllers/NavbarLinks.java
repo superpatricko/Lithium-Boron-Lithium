@@ -18,7 +18,7 @@ public class NavbarLinks {
 	
 	private static Link VIEW_SCHEDULE     = new Link("Schedule", routes.Application.viewSchedule().url());
 	private static Link VIEW_SOME_PATIENT = new Link("Patient 1", routes.PatientController.view(1).url());
-	private static Link Services =  new Link("Service",routes.AdminController.modifyService().url());
+	private static Link SERVICES=  new Link("Service",routes.AdminController.modifyService().url());
 	
 	public static Link[] getLinksForSession(SessionInfo s){
 		
@@ -30,7 +30,7 @@ public class NavbarLinks {
 			case Administrator:
 				return new Link[]{VIEW_SCHEDULE};
 			case Director:
-				return new Link[]{VIEW_SCHEDULE};
+				return new Link[]{VIEW_SCHEDULE,SERVICES};
 			case Doctor:
 				return new Link[]{VIEW_SOME_PATIENT, VIEW_SCHEDULE};
 			case Intern:

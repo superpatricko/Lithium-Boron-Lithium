@@ -1,0 +1,41 @@
+@(admin: List[model.Service])
+@main("hello"){
+}{	
+
+	@header(null)
+	<table class ="table table-bordered">
+	<tr> 
+	<td class="success">Service Int </td>   <td class="success"> Name </td> <td class="success"> cost</td>
+	<td class="success">unit  </td> <td class="success">isActive</td>
+	</tr>
+	
+ @for(services <- admin){
+	<tr> 
+	<td>@services.getId() </td>   <td>@services.getName() </td> <td>@services.getCost() </td> 
+	<td> </td>     <td> </td>  
+	</tr>	
+	}
+	</table>
+	<div class="row">
+	<div class="col-md-6"
+	<form method="POST" >
+	<div class="form-group">
+	<label> Enter option to delete</label>
+	<select dropdown class="form-control" name="deleteService>
+	@for(services <- admin){
+		<option name="@services.getId()" class="form-control" > @services.getId()
+		</option>
+	}
+	</select>
+	</div>
+	<input type ="submit" class="form-control btn-success" value ="submit" name="deleteId">
+	</form>
+	</div>
+	
+	</div>
+	
+}{
+	
+
+
+}

@@ -46,7 +46,7 @@ public class Administrator extends Employee {
 		try{
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
 					"SELECT employee_id, first_name, family_name,is_Director,is_open_access_admin,is_senior"
-					+ "		FROM employee NATURAL JOIN administrator");
+							+ "		FROM employee NATURAL JOIN administrator");
 
 			ResultSet r = null;
 
@@ -104,6 +104,19 @@ public class Administrator extends Employee {
 	public void setOpenAccess(boolean openAccess) {
 		this.openAccess = openAccess;
 	}
+	public boolean deleteId(int id){
+		try{
+			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
+					"Update Service delete where " + id + " = id");
 
 
+			s.executeQuery();		
+		}
+		catch(Exception e){
+
+		}
+		return true;
+
+
+	}
 }
