@@ -20,6 +20,7 @@ public class NavbarLinks {
 	private static Link VIEW_SOME_PATIENT = new Link("Patient 1", routes.PatientController.view(1).url());
 	private static Link VIEW_SERVICES_MODIFY=  new Link("Service",routes.AdminController.modifyService().url());
 	private static Link VIEW_SERVICES_READONLY =  new Link("Service ReadOnly",routes.AdminController.serviceReadOnly().url());
+	private static Link	VIEW_HUMANRESSOURCES = new Link("Human Ressouces", routes.AdminController.humanRessources().url());
 	public static Link[] getLinksForSession(SessionInfo s){
 		
 		if(s == null){
@@ -28,9 +29,9 @@ public class NavbarLinks {
 		
 		switch(s.role){
 			case Administrator:
-				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_READONLY};
+				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_READONLY,VIEW_HUMANRESSOURCES};
 			case Director:
-				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_MODIFY};
+				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_MODIFY,VIEW_HUMANRESSOURCES};
 			case Doctor:
 				return new Link[]{VIEW_SOME_PATIENT, VIEW_SCHEDULE};
 			case Intern:
@@ -50,7 +51,7 @@ public class NavbarLinks {
 			case Resident:
 				return new Link[]{VIEW_SOME_PATIENT, VIEW_SCHEDULE};
 			case SeniorAdministrator:
-				return new Link[]{VIEW_SCHEDULE};
+				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_MODIFY,VIEW_HUMANRESSOURCES};
 			case Technician:
 				return new Link[]{VIEW_SCHEDULE};
 			default:

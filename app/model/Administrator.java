@@ -14,6 +14,7 @@ public class Administrator extends Employee {
 	private boolean openAccess;
 	private static Doctor doctor;
 	private Nurse nurse;
+	
 	private static Schedule schedule;
 	private static Service service;
 
@@ -103,6 +104,9 @@ public class Administrator extends Employee {
 	}
 	public void setOpenAccess(boolean openAccess) {
 		this.openAccess = openAccess;
+	}
+	public List<Nurse> getAllNurses(){
+		return nurse.getAllNurses();
 	}
 	public boolean deleteId(int id){
 		try{

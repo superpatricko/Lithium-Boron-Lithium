@@ -1,0 +1,41 @@
+@(session: model.SessionAuth.SessionInfo)(admin: List[model.Administrator],doctor:List[model.Doctor],nurse:List[model.Nurse]))
+@main("hello"){
+}{	
+
+	@header(session)
+	<h1> Human Ressources All Employees </h1>
+	<table class ="table table-bordered">
+	<tr> 
+	<td class="success">Id </td>   <td class="success"> FirstName </td> <td class="success"> LastName</td>
+	<td class="success">PositionType </td> 
+	</tr>
+	
+ @for(a <- admin){
+	<tr> 
+	<td>@a.getEmployeeId() </td>   <td>@a.getFirstName()
+	 </td> <td>@a.getLastName() </td> 
+	<td> Adminstrator</td>     
+	</tr>	
+	}
+	@for(d <- doctor){
+	<tr> 
+	<td>@d.getEmployeeId() </td>   <td>@d.getFirstName()
+	 </td> <td>@d.getLastName() </td> 
+	<td> Doctors</td>     
+	</tr>	
+	}
+	@for(n <- nurse){
+	<tr> 
+	<td>@n.getEmployeeId() </td>   <td>@n.getFirstName()
+	 </td> <td>@n.getLastName() </td> 
+	<td> Nurses</td>     
+	</tr>	
+	}
+	</table>
+	
+	
+}{
+	
+
+
+}

@@ -1,6 +1,8 @@
 package controllers;
 
 import model.Administrator;
+import model.Doctor;
+import model.Nurse;
 import model.SessionAuth;
 import model.SessionAuth.SessionInfo;
 import play.mvc.Result;
@@ -14,6 +16,8 @@ import views.html.ServicesViewOnly;
 public class AdminController extends Controller{
 	
 	 private static Administrator admin = new Administrator(-35);
+	 
+	 private static Nurse nurse  = new Nurse(21) ;
 	 public static Result modifyService(){
 		 SessionInfo s =SessionAuth.instance.getSession(session());
 		 return ok(views.html.services.render(s,admin.getAllServices()));		 
@@ -33,6 +37,11 @@ public class AdminController extends Controller{
 		 SessionInfo s =SessionAuth.instance.getSession(session());
 		 return ok (views.html.ServicesViewOnly.render(s,admin.getAllServices()));
 		 
+	 }
+	 public static Result humanRessources(){
+		 SessionInfo s =SessionAuth.instance.getSession(session());
+		return ok (views.html.HumanRessources.render(s,admin.getAllAdministrators(),
+				admin.getAllDoctors(),admin.getAllNurses()));
 	 }
 	
 	
