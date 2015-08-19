@@ -47,7 +47,7 @@ public class Payroll {
 		this.pay_type = pay_type;
 	}
 
-	public double base_rate() {
+	public double getBase_rate() {
 		return base_rate;
 	}
 
@@ -55,7 +55,7 @@ public class Payroll {
 		this.base_rate = base_rate;
 	}
 
-	public int seniority_bonus_amount() {
+	public int getSeniority_bonus_amount() {
 		return seniority_bonus_amount;
 	}
 
