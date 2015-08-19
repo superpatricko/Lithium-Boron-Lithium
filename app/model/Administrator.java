@@ -106,15 +106,16 @@ public class Administrator extends Employee {
 	}
 	public boolean deleteId(int id){
 		try{
-			String query = "Delete from Service where service_id=? ";
-			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
+			String query = "DELETE FROM Service"
+					+ "WHERE service_id=?";
+			PreparedStatement s =DatabaseManager.instance.createPreparedStatement(
 					query);
 			
 			s.setInt(1, id);
 			
-			System.out.println("excuting " +s);
+			//System.out.println("excuting " +s);
 			
-			s.executeUpdate();		
+			s.executeQuery();		
 		}
 		catch(Exception e){
 

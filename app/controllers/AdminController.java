@@ -8,13 +8,15 @@ import play.mvc.Controller;
 import views.html.*;
 import play.data.DynamicForm;
 import play.i18n.*;
+import views.html.ServicesViewOnly;
+
 
 public class AdminController extends Controller{
 	
 	 private static Administrator admin = new Administrator(-35);
 	 public static Result modifyService(){
 		 SessionInfo s =SessionAuth.instance.getSession(session());
-		 return ok(views.html.services.render(admin.getAllServices()));		 
+		 return ok(views.html.services.render(s,admin.getAllServices()));		 
 	 }
 	 public static Result getModified(){
 		 return modifyService();
@@ -26,6 +28,11 @@ public class AdminController extends Controller{
 		 System.out.println(idToDelete);
 		 admin.deleteId(idToDelete);
 		 return modifyService();
+	 }
+	 public static Result serviceReadOnly(){
+		 SessionInfo s =SessionAuth.instance.getSession(session());
+		 return ok (views.html.ServicesViewOnly.render(s,admin.getAllServices()));
+		 
 	 }
 	
 	
