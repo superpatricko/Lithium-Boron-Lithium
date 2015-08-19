@@ -18,11 +18,18 @@ public class Service {
 	
 	private String name;
 	private String cost;
+	private boolean active;
+	private int unit;
 	
 	public Service(int id, String name, String cost) {
 		this.id = id;
 		this.name = name;
 		this.cost = cost;
+	}
+	public Service(int id, String name, String cost,int unit,boolean isActive){
+		this(id,name,cost);
+		this.unit = unit;
+		this.active = isActive;
 	}
 
 	public Service(int id) {
@@ -62,7 +69,33 @@ public class Service {
 		
 		return services;
 	}
-	
+	public static List<Service> getMegaServices(){
+		List<Service> services = new LinkedList<Service>();
+		
+		// TODO - optionally filter only active services
+		
+		try {
+			PreparedStatement s = DatabaseManager.instance.createPreparedStatement("SELECT * FROM service");
+			
+			ResultSet r = null;
+			
+			try{
+				r = s.executeQuery();
+				
+				while(r.next()){
+					services.add(new Service(r.getInt("service_id"), r.getString("name"), r.getString("cost"),r.getInt("unit_id"),
+							r.getBoolean("is_active")));
+				}
+			}finally{
+				if (r != null) r.close();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return services;
+	}
 	public int getId() {
 		return id;
 	}
@@ -85,6 +118,18 @@ public class Service {
 
 	public void setCost(String cost) {
 		this.cost = cost;
+	}
+	public void setActive(boolean active){
+		this.active = active;				
+	}
+	public boolean getActive(){
+		return active;
+	}
+	public void setUnit(int unit){
+		this.unit = unit;
+	}
+	public  int getUnit(){
+		return unit;
 	}
 
 }

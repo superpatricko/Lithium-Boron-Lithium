@@ -76,8 +76,9 @@ public class Administrator extends Employee {
 	public  List<Doctor> getAllDoctors(){
 		return Doctor.getAllDoctors();
 	}
+	//Not not the same getAllServices using mega
 	public  List<Service> getAllServices(){
-		return Service.getAllServices();
+		return Service.getMegaServices();
 	}
 	public String getFirstName() {
 		return firstName;
@@ -133,16 +134,24 @@ public class Administrator extends Employee {
 	}
 	public boolean deleteId(int id){
 		try{
-			String query = "DELETE FROM Service"
-					+ "WHERE service_id=?";
+			/*String findIsActive = "Select is_active from service where service_id=?";
+			PreparedStatement active =DatabaseManager.instance.createPreparedStatement(
+					findIsActive);
+			active.setInt(1, id);
+			ResultSet result = active.executeQuery();*/
+			
+			String query = "Update service"
+					+ " SET is_active=FALSE"
+					+ " WHERE service_id=?";
+					
 			PreparedStatement s =DatabaseManager.instance.createPreparedStatement(
 					query);
 
 			s.setInt(1, id);
 
-			//System.out.println("excuting " +s);
+			System.out.println("excuting " +s);
 
-			s.executeQuery();		
+			System.out.println(s.executeUpdate());		
 		}
 		catch(Exception e){
 
