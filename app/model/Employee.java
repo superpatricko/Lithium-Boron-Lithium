@@ -38,8 +38,8 @@ public class Employee {
 					"WHERE Payroll.payroll_id=? " 
 					+ "AND Employee.payroll_id=?");
 
-			s.setInt(1, this.payroll_id);
-			s.setInt(2, this.payroll_id);
+			s.setInt(1, this.payroll_id.getPayroll_id());
+			s.setInt(2, this.payroll_id.getPayroll_id());
 	
 			ResultSet r = null;
 			
