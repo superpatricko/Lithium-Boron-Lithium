@@ -21,7 +21,7 @@ GET      /director/services         controllers.AdminController.modifyService()
 POST     /director/services	    	controllers.AdminController.deleteService()
 GET		 /admin/services			controllers.AdminController.serviceReadOnly()
 GET     /admin/humanRessources		controllers.AdminController.humanRessources()
-
+GET      /admin/reports             controllers.AdminController.reports()
 # Nurse
 GET     /view/nurse/:id             controllers.NurseController.view(id : Int)
 

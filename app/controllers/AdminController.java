@@ -43,6 +43,11 @@ public class AdminController extends Controller{
 		return ok (views.html.HumanRessources.render(s,admin.getAllAdministrators(),
 				admin.getAllDoctors(),admin.getAllNurses()));
 	 }
+	 public static Result reports(){
+		 SessionInfo s =SessionAuth.instance.getSession(session());
+		 return ok (views.html.reports.render(s,admin.getAllReports()));
+		// return TODO;
+	 }
 	
 	
 	

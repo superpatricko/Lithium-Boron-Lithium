@@ -1,0 +1,47 @@
+@(session: model.SessionAuth.SessionInfo)(reports: List[model.Reports])
+@main("hello"){
+	
+	
+}{	
+	@header(session)
+	<h1> ReportFile </h1>
+	<table class ="table table-condensed" id ="table">
+	<thead>
+	<tr> 
+	<th class="success" data-sort="int">Unit_Id </th>   <th class="success" data-sort="int"> Service_Id </th> 
+	<th class="success"> Operation_Room</th> 	<th class="success">service_log_Id </th> 
+	<th class="success" data-sort="string"> Start Date</th> 	<th class="success">End date </th> 
+	<th class="success" data-sort="int"> Doctor</th> 	<th class="success">Nurse</th> 
+	<th class="success">Patient</th> 	<th class="success">surgeryLog</th> 
+	<th class="success"> Operation_Room</th> 	<th class="success" data-sort="string">service name </th> 
+	<th class="success" data-sort="int"> room number</th> 	
+	<th class="success" data-sort="int"> cost </th> 	<th class="success" data-sort="int">Is_Active </th> 
+	<th class="success"> unit care</th> 	
+	</tr>
+	</thead>
+	<tbody>
+	@for(r <- reports){
+		<tr>
+		<td> @r.getUnit() </td> <td> @r.getService()</td> 
+		<td> @r.getOperationRoom()</td>
+		<td> @r.getServiceLog()</td> <td>@r.getStartTime() </td> <td> @r.getEndTime()</td> 
+		<td> @r.getDoctor() </td> <td> @r.getNurse() </td> 
+		<td> @r.getPatient()</td> <td> @r.getSurgeryLog()</td> <td>@r.getOperationRoom </td>
+		<td> @r.getServiceName()</td> <td>@r.getRoomNumber() </td>
+		<td> @r.getCost()</td> <td> @r.isActive()</td>
+		<td> @r.getUnitName()</td>
+		
+		</tr>
+	}
+	</tbody>
+	</table>
+	
+    
+}{
+<script src='@routes.Assets.at("js/stupidtable.js")' type="text/javascript"></script>
+	<script>
+    $(function(){
+    	$("table").stupidtable();
+    });
+  </script>
+}

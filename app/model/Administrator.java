@@ -13,7 +13,8 @@ public class Administrator extends Employee {
 	private boolean director;
 	private boolean openAccess;
 	private static Doctor doctor;
-	private Nurse nurse;
+	private static Nurse nurse;
+	private static Reports reports;
 	
 	private static Schedule schedule;
 	private static Service service;
@@ -68,6 +69,9 @@ public class Administrator extends Employee {
 
 		return administrators;
 
+	}
+	public List<Reports> getAllReports(){
+		return Reports.getAllReports();
 	}
 	public  List<Doctor> getAllDoctors(){
 		return Doctor.getAllDoctors();
