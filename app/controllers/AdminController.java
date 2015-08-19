@@ -53,6 +53,18 @@ public class AdminController extends Controller{
 		 //DynamicForm f= form().bindFromRequest();
 		 return ok(AddService.render(s));
 	 }
+	 public static Result insertService(){
+		 SessionInfo s =SessionAuth.instance.getSession(session());
+		 DynamicForm f= form().bindFromRequest();
+		 int id = Integer.parseInt(f.get("serviceId"));
+		 String name = f.get("nameService");
+		 float cost = Float.parseFloat(f.get("cost"));
+		 int unit = Integer.parseInt(f.get("unit"));
+		 int isActive = Integer.parseInt(f.get("isActive"));
+		 //insert into service
+		 admin.addService(id, name, cost, unit, isActive);
+		 return ok(views.html.index.render(s,"new service added"));
+	 }
 	
 	
 	

@@ -15,7 +15,7 @@ public class Administrator extends Employee {
 	private static Doctor doctor;
 	private static Nurse nurse;
 	private static Reports reports;
-	
+
 	private static Schedule schedule;
 	private static Service service;
 
@@ -112,17 +112,36 @@ public class Administrator extends Employee {
 	public List<Nurse> getAllNurses(){
 		return nurse.getAllNurses();
 	}
+	public void addService(int id,String name,float cost,int unit,int isActive){
+		try{
+			String query = "Insert Into service Values(?,?,?,?,?)";
+			PreparedStatement s =DatabaseManager.instance.createPreparedStatement(
+					query);
+
+			s.setInt(1, id);
+			s.setString(2, name);
+			s.setFloat(3,cost);
+			s.setInt(4, unit);
+
+			s.setBoolean(5,isActive==1);
+			System.out.println(s);
+			System.out.println(s.executeUpdate());
+		}
+		catch(Exception e){
+
+		}
+	}
 	public boolean deleteId(int id){
 		try{
 			String query = "DELETE FROM Service"
 					+ "WHERE service_id=?";
 			PreparedStatement s =DatabaseManager.instance.createPreparedStatement(
 					query);
-			
+
 			s.setInt(1, id);
-			
+
 			//System.out.println("excuting " +s);
-			
+
 			s.executeQuery();		
 		}
 		catch(Exception e){
