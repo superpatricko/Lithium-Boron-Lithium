@@ -2,9 +2,7 @@ package model;
 
 public class Payroll {
 
-	public static enum Pay_Type {
-		wage, year
-	};
+	public static enum Pay_Type { wage, year };
 
 	private int payroll_id;
 	private String title;
@@ -13,6 +11,17 @@ public class Payroll {
 	private int seniority_bonus_amount;
 	private float seniority_bonus_multiplier;
 	private float overtime_multiplier;
+
+	public Payroll(int payroll_id, String title, Pay_Type pay_type, double base_rate, 
+		int seniority_bonus_amount, float seniority_bonus_multiplier, float overtime_multiplier) {
+		this.payroll_id = payroll_id;
+		this.title = title;
+		this.pay_type = pay_type;
+		this.base_rate = base_rate;
+		this.seniority_bonus_amount = seniority_bonus_amount;
+		this.seniority_bonus_multiplier = seniority_bonus_multiplier;
+		this.overtime_multiplier = overtime_multiplier;
+	}
 
 	public int getPayroll_id() {
 		return payroll_id;
