@@ -23,6 +23,9 @@ public class Doctor extends Employee {
 	
 	private String firstName;
 	private String lastName;
+	private boolean is_intern;
+	private boolean is_resident;
+	private int supervising_physician_id;
 
 	/**
 	 * Create a new Doctor object with the given name and ID. This constructor is meant for
@@ -54,6 +57,16 @@ public class Doctor extends Employee {
 		super(employeeId);
 		this.firstName = null;
 		this.lastName  = null;
+	}
+
+	public Doctor(int employeeId, String firstName, String lastName, boolean is_intern, 
+		boolean is_resident, int supervising_physician_id) {
+		super(employeeId);
+		this.firstName = firstName;
+		this.lastName  = lastName;
+		this.is_intern  = is_intern;
+		this.is_resident  = is_resident;
+		this.supervising_physician_id  = supervising_physician_id;
 	}
 
 	/**
@@ -88,6 +101,46 @@ public class Doctor extends Employee {
 		return doctors;
 		
 	}
+
+	// Get a specific doctor from the database, given an ID
+	public static Doctor getSpecificDoctor(int givenID){
+		try {
+			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
+					"SELECT employee_id, first_name, family_name, is_intern, is_resident, supervising_physician_id " +
+					"FROM Employee NATURAL JOIN Doctor" +
+					"WHERE Employee.employee_id=? "
+					+ "AND Doctor.employee_id=? ");
+
+			s.setInt(1, givenID);
+			s.setInt(2, givenID);
+
+			ResultSet r = null;
+
+			try{
+				r = s.executeQuery();
+
+				if(r.next()){
+					Doctor doctor = new Doctor(
+						r.getInt("employee_id"),
+						r.getString("first_name"),
+						r.getString("family_name"),
+						r.getBoolean("is_intern"),
+						r.getBoolean("is_resident"),
+						r.getInt("supervising_physician_id"));
+
+					return doctor;
+				}
+
+			}finally{
+				if (r != null) r.close();
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	
 	public String getFirstName() {
 		return firstName;
