@@ -18,6 +18,7 @@ public class NavbarLinks {
 	
 	private static Link VIEW_SCHEDULE     = new Link("Schedule", routes.Application.viewSchedule().url());
 	private static Link VIEW_SOME_PATIENT = new Link("Patient 1", routes.PatientController.view(1).url());
+	private static Link Services =  new Link("Service",routes.AdminController.modifyService().url());
 	
 	public static Link[] getLinksForSession(SessionInfo s){
 		
