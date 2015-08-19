@@ -1,5 +1,7 @@
 package model;
 
+import model.Payroll.*;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,14 +28,14 @@ public class Employee {
 	}
 
 	// Get all payroll statements for this employee
-	public static List<Payroll> getPayrolls() {
+	public List<Payroll> getPayrolls() {
 		List<Payroll> payrolls = new LinkedList<Payroll>();
 		
 		try{
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
 					"SELECT payroll_id, title, pay_type, base_rate, seniority_bonus_amount, seniority_bonus_multiplier, overtime_multiplier " + 
 					"FROM Payroll NATURAL JOIN Employee " + 
-					"WHERE Payroll." + payroll_id + "=Employee." + payroll_id);
+					"WHERE Payroll." + this.payroll_id + "=Employee." + this.payroll_id);
 	
 			ResultSet r = null;
 			
