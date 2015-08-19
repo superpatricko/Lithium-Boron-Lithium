@@ -35,7 +35,11 @@ public class Employee {
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
 					"SELECT payroll_id, title, pay_type, base_rate, seniority_bonus_amount, seniority_bonus_multiplier, overtime_multiplier " + 
 					"FROM Payroll NATURAL JOIN Employee " + 
-					"WHERE Payroll." + this.payroll_id + "=Employee." + this.payroll_id);
+					"WHERE Payroll.payroll_id=? " 
+					+ "AND Employee.payroll_id=?");
+
+			s.setInt(1, this.payroll_id);
+			s.setInt(2, this.payroll_id);
 	
 			ResultSet r = null;
 			
