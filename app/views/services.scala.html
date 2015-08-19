@@ -21,17 +21,15 @@
 	<form method="POST" >
 	<div class="form-group">
 	<label> Enter option to delete</label>
-	<select dropdown class="form-control" name="deleteService>
+	<select dropdown class="form-control" name="deleteService">
 	@for(services <- admin){
-		<option name="@services.getId()" class="form-control" > @services.getId()
-		</option>
+		<option name="@services.getId()" class="form-control" > @services.getId()</option>
 	}
 	</select>
 	</div>
-	<input type ="submit" class="form-control btn-success" value ="submit" name="deleteId">
+	<input type ="submit" class="form-control btn-success" value ="submit" name="deleteId"/>
 	</form>
-	</div>
-	
+	</div>	
 	</div>
 	
 }{

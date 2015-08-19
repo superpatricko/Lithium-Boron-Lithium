@@ -18,6 +18,7 @@ POST    /patient/schedule-procedure/:id controllers.PatientController.schedulePr
 
 # Service
 GET      /admin/services            controllers.AdminController.modifyService()
+POST     /admin/services	    	 controllers.AdminController.deleteService()
 
 # Nurse
 GET     /view/nurse/:id             controllers.NurseController.view(id : Int)
