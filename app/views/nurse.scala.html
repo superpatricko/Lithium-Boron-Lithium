@@ -1,0 +1,85 @@
+@(session: model.SessionAuth.SessionInfo)(nurse: model.Nurse)
+
+@main("Nurse Report for " + nurse.getFirstName() + " " + nurse.getLastName()) {
+}{
+    @header(session)
+
+    <div class="jumbotron">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <h3>Nurse Summary - @nurse.getFirstName() @nurse.getLastName()</h3>
+
+            </div>
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+            <h4>Assigned rooms</h4>
+            
+            @for(room <- nurse.getAssignedRooms() ) {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>Room @room.getRoomNumber()</h4>
+
+                        @for(p <- room.getPatients()){
+                            <p><a href="@routes.PatientController.view(p.getId())">@p.getFirstName() @p.getLastName()</a></p>
+                        }
+
+
+                    </div>
+                </div>
+            }
+            </div>
+        </div>
+        
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+            <h4>Service Log</h4>
+        
+        
+                    @for(record <- nurse.getServiceRecords()) {
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <h4>@record.getService().getName()</h4>
+
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>Started</td>
+                                        <td>@record.getStart()</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Completed</td>
+                                        <td>@record.getEnd()</td>
+                                    </tr>
+
+                                    @if(record.getDoctor() != null){
+                                        <tr>
+                                            <td>Doctor</td>
+                                            <td><a href="@routes.DoctorController.view( record.getDoctor().getEmployeeId())">@record.getDoctor().getFirstName() @record.getDoctor().getLastName()</a></td>
+                                        </tr>
+                                    }
+
+                                        <tr>
+                                            <td>Patient</td>
+                                            <td><a href="@routes.PatientController.view(record.getPatient().getId())">@record.getPatient().getFirstName() @record.getPatient().getLastName()</a></td>
+                                        </tr>
+ 
+                                </table>
+
+
+                            </div>
+                        </div>
+                    }
+        
+        
+            </div>
+        </div>
+
+    </div>
+}{
+ 
+}

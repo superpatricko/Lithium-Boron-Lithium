@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 /**
  * Class representing a patient room in the database
  * 
@@ -12,6 +14,8 @@ public class PatientRoom {
 	private int maxCapacity;
 
 	private Nurse nurse;
+	private int roomId;
+	private List<Patient> patients;
 
 	// Default room
 	public PatientRoom(String roomNumber) {
@@ -20,6 +24,14 @@ public class PatientRoom {
 		this.nurse = null;
 	}
 
+	/*package*/PatientRoom(int roomid, String roomNumber, int maxCapacity, Nurse nurse){
+		this.roomId = roomid;
+		this.roomNumber = roomNumber;
+		this.maxCapacity = maxCapacity;
+		this.nurse = nurse;
+	}
+
+	
 	/*package*/PatientRoom(String roomNumber, int maxCapacity, Nurse nurse){
 		this.roomNumber = roomNumber;
 		this.maxCapacity = maxCapacity;
@@ -48,6 +60,18 @@ public class PatientRoom {
 
 	public void setNurse(Nurse nurse) {
 		this.nurse = nurse;
+	}
+
+	public int getRoomId() {
+		return roomId;
+	}
+
+	public void setPatients(List<Patient> patients) {
+		this.patients = patients;
+	}
+
+	public List<Patient> getPatients() {
+		return patients;
 	}
 
 }
