@@ -186,8 +186,8 @@ public class Doctor extends Employee {
 		
 		try{
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
-					"SELECT patient_id, first_name, family_name, patient_room, medicare_number, hospital_card_number, assigned_doctor, is_in_treatment " +
-					"FROM Doctor NATURAL JOIN Patient " + 
+					"SELECT patient_id, first_name, family_name, patient_room_id, medicare_number, hospital_card_number, assigned_doctor, is_in_treatment " +
+					"FROM Patient " + 
 					"WHERE Patient.assigned_doctor=?");
 
 			s.setInt(1, this.getEmployeeId());
@@ -204,7 +204,7 @@ public class Doctor extends Employee {
 						r.getString("family_name"),
 						r.getString("medicare_number"),
 						r.getString("hospital_card_number"),
-						new PatientRoom((r.getString("patient_room")))  // is this legal in java?
+						new PatientRoom((r.getString("patient_room_id")))  // is this legal in java?
 						)); 
 				}
 								

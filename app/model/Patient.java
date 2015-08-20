@@ -65,20 +65,24 @@ public class Patient {
 
 		try {
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
-					"SELECT medicare_number, hospital_card_number, "
-					+ " Patient.first_name as patient_fname, Patient.family_name AS patient_lname, "
-					+ "room_number, max_capacity, "                              // patient_room
-					+ "nurse.first_name AS nurse_fname, nurse.family_name AS nurse_lname, nurse.employee_id as nurse_eid "  // nurse details
-					+ " FROM Patient, Patient_Room, Employee AS nurse "
-					+ "WHERE Patient.patient_id=? "
-					+ "AND Patient.patient_room_id=Patient_Room.patient_room_id "
-					+ "AND nurse.employee_id=Patient_Room.nurse_id ");
+					" SELECT medicare_number, hospital_card_number,  " +
+							"  Patient.first_name as patient_fname, Patient.family_name AS patient_lname,  " +
+							" NOT ISNULL(Patient.patient_room_id) AS has_room, " +
+							" room_number, max_capacity,  " +
+							" nurse.first_name AS nurse_fname, nurse.family_name AS nurse_lname, nurse.employee_id as nurse_eid  " +
+							" FROM Patient, Patient_Room, Employee AS nurse  " +
+							" WHERE Patient.patient_id=? " +
+							" AND (Patient.patient_room_id=Patient_Room.patient_room_id OR ISNULL(Patient.patient_room_id)) " +
+							" AND nurse.employee_id=Patient_Room.nurse_id  " +
+							" LIMIT 1 ");
 
 			s.setInt(1, id);
 
 			ResultSet r = null;
 
 			try{
+				System.out.println("execing " + s.toString());
+				
 				r = s.executeQuery();
 
 				if(r.next()){
@@ -87,10 +91,12 @@ public class Patient {
 						r.getString("nurse_fname"),
 						r.getString("nurse_lname"));
 
-					PatientRoom room = new PatientRoom(
+					PatientRoom room = r.getBoolean("has_room") ? new PatientRoom(
 							r.getString("room_number"),
 							r.getInt("max_capacity"),
-							nurse);
+							nurse)
+						:
+							null;
 
 					Patient patient = new Patient(
 							id,

@@ -17,7 +17,7 @@ public class NavbarLinks {
 	}
 	
 	private static Link VIEW_SCHEDULE     = new Link("Schedule", routes.Application.viewSchedule().url());
-	private static Link VIEW_SOME_PATIENT = new Link("Patient 1", routes.PatientController.view(1).url());
+	private static Link VIEW_ALL_PATIENTS = new Link("Patients", routes.DoctorController.viewPatients().url());
 	private static Link VIEW_SERVICES_MODIFY=  new Link("Service",routes.AdminController.modifyService().url());
 	private static Link VIEW_SERVICES_READONLY =  new Link("Service ReadOnly",routes.AdminController.serviceReadOnly().url());
 	private static Link VIEW_HUGE_REPORT = new Link("Big Report",routes.AdminController.reports().url());
@@ -35,9 +35,9 @@ public class NavbarLinks {
 			case Director:
 				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_MODIFY,VIEW_HUMANRESSOURCES,VIEW_HUGE_REPORT,VIEW_STATS_COST};
 			case Doctor:
-				return new Link[]{VIEW_SOME_PATIENT, VIEW_SCHEDULE};
+				return new Link[]{VIEW_ALL_PATIENTS, VIEW_SCHEDULE};
 			case Intern:
-				return new Link[]{VIEW_SOME_PATIENT, VIEW_SCHEDULE};
+				return new Link[]{VIEW_ALL_PATIENTS, VIEW_SCHEDULE};
 			case Nurse:
 				return new Link[]{VIEW_SCHEDULE};
 			case NurseShiftSupervisor:
@@ -51,7 +51,7 @@ public class NavbarLinks {
 			case PlaymateNurse:
 				return new Link[]{VIEW_SCHEDULE};
 			case Resident:
-				return new Link[]{VIEW_SOME_PATIENT, VIEW_SCHEDULE};
+				return new Link[]{VIEW_ALL_PATIENTS, VIEW_SCHEDULE};
 			case SeniorAdministrator:
 				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_MODIFY,VIEW_HUMANRESSOURCES};
 			case Technician:

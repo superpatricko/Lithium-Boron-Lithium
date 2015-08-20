@@ -32,7 +32,9 @@
                     </tr>
                 </table>
 
-        @room(patient.getRoom())
+                @if(patient.getRoom() != null){
+                    @room(patient.getRoom())
+                }
         
             </div>
         </div>
