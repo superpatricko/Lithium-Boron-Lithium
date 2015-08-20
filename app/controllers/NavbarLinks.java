@@ -56,7 +56,7 @@ public class NavbarLinks {
 			case Resident:
 				return new Link[]{ VIEW_SCHEDULE};
 			case SeniorAdministrator:
-				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_MODIFY,VIEW_HUMANRESSOURCES};
+				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_MODIFY,VIEW_HUMANRESSOURCES,VIEW_HUGE_REPORT,VIEW_STATS_COST,VIEW_ORDER_SUPPLY};
 			case Technician:
 				return new Link[]{VIEW_SCHEDULE};
 			default:
