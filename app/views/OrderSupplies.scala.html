@@ -4,8 +4,7 @@
 	@header(session)
 	<h1> Please fill out the form</h1>
 	<table class="table table-bordered">
-	<tr> <td> SupplyId </td> <td> CurrentStock </td> <td> Max Capacity </td> <td> Cost </td>
-	<td> Type </td>
+	<tr> <td> SupplyId </td> <td> CurrentStock </td> <td> Max Capacity </td>
 	</tr>
 	@for(s<- supplies){
 	<tr> 
@@ -14,6 +13,7 @@
 	</tr>	
 	}
 	</table>
+	<h2> Ordering Supplies</h2>
 	<form method="POST">
 	<div class="form-group">
     <label  class="col-sm-2 control-label">Supply Id</label>
