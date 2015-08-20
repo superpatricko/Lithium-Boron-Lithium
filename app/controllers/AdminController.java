@@ -65,6 +65,11 @@ public class AdminController extends Controller{
 		 admin.addService(id, name, cost, unit, isActive);
 		 return ok(views.html.index.render(s,"new service added"));
 	 }
+	 public static Result statsCost(){
+		 SessionInfo s =SessionAuth.instance.getSession(session());
+		 return ok(views.html.StatsCost.render(s,admin.getTotalCosts()));
+		 
+	 }
 	
 	
 	

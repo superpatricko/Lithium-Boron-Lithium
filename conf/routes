@@ -24,6 +24,7 @@ GET     /admin/humanRessources		controllers.AdminController.humanRessources()
 GET      /admin/reports             controllers.AdminController.reports()
 GET      /director/services/modify  controllers.AdminController.addService()
 POST	/director/services/modify	controllers.AdminController.insertService()
+GET     /admin/statsCost            controllers.AdminController.statsCost()
 # Nurse
 GET     /view/nurse/:id             controllers.NurseController.view(id : Int)
 

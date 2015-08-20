@@ -15,7 +15,7 @@ public class Administrator extends Employee {
 	private static Doctor doctor;
 	private static Nurse nurse;
 	private static Reports reports;
-
+	private  CostReport costReport = new CostReport();
 	private static Schedule schedule;
 	private static Service service;
 
@@ -76,7 +76,7 @@ public class Administrator extends Employee {
 	public  List<Doctor> getAllDoctors(){
 		return Doctor.getAllDoctors();
 	}
-	//Not not the same getAllServices using mega
+	//Not not the same getAllServices using mega all atributes
 	public  List<Service> getAllServices(){
 		return Service.getMegaServices();
 	}
@@ -131,6 +131,9 @@ public class Administrator extends Employee {
 		catch(Exception e){
 
 		}
+	}
+	public  double getTotalCosts(){
+		return costReport.getTotalCosts();
 	}
 	public boolean deleteId(int id){
 		try{
