@@ -1,12 +1,13 @@
 @(session: model.SessionAuth.SessionInfo)(totalCosts: Double,
 	currentTotalCosts :Double,costPerMonth: List[Double],totalSupply:List[model.CostReport],
-	monthUsage:List[model.CostReport])
+	monthUsage:List[model.CostReport],doctorAllServices:List[model.DoctorReport],
+	doctorAllSurgeries:List[model.DoctorReport])
 	)
 @main("hello"){
 	
 }{
 @header(session)
-	<h1 class="text-center text-success"> Stats Cost Page </h1>
+	<h1 class="text-center text-success"> Stats Cost Page  and Doctor Info</h1>
 	<h2 class="text-center text-success"> Total Cost Supplies All Time <u>$ @totalCosts</u></h2>
 	<h2 class="text-center text-success"> Total Cost Current Supplies <u>$ @currentTotalCosts</u></h2>
 	<br>
@@ -88,6 +89,32 @@
  	</tr>
 	
 	</table>
+	<h2> Doctor All Services ordered by doctor	</h2>
+	<table  class="table table-bordered">
+	<tr>  <td class="success"> Employee_Id</td> <td class="success"> FirstName</td> <td class="success"> LastName</td>
+	<td class="success"> service_Id</td> <td class="success"> service Name </td> <td class="success"> Number of Times Performed</td>
+	</tr>
+	@for(as <-doctorAllServices){
+		<tr>
+		<td> @as.getEmployeeId()</td>   <td> @as.getFirstName()</td> <td> @as.getLastName() </td> 
+		<td>@as.getServiceId() </td> <td> @as.getServiceName()</td> <td>@as.getCount </td>
+		</tr>
+	}
 	
+	</table>
+	
+	<h2> Doctor All Surgeires ordered by doctor	</h2>
+	<table class="table table-bordered">
+	<tr>  <td class="success"> Employee_Id</td> <td class="success"> FirstName</td> <td class="success"> LastName</td>
+	<td class="success"> service_Id</td> <td class="success"> service Name </td> <td class="success"> Number of Times Performed</td>
+	</tr>
+	@for(as <-doctorAllSurgeries){
+		<tr>
+		<td> @as.getEmployeeId()</td>   <td> @as.getFirstName()</td> <td> @as.getLastName() </td> 
+		<td>@as.getServiceId() </td> <td> @as.getServiceName()</td> <td>@as.getCount </td>
+		</tr>
+	}
+	
+	</table>
 }{
 }

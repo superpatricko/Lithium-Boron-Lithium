@@ -56,7 +56,7 @@ public class CostReport {
 							"  FROM order_history ,supply " +
 							"  WHERE order_history.supply_id = supply.supply_id" +
 							" AND order_history.date_of_order >= ? " +
-							" AND order_history.date_of_order <= ?");
+					" AND order_history.date_of_order <= ?");
 			Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(beginAndEndMonth[month][0]);
 			Date utilDate2 =  new SimpleDateFormat("yyyy-MM-dd").parse(beginAndEndMonth[month][1]);
 			java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime()); 
@@ -86,7 +86,7 @@ public class CostReport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return costReport;
 	}
 
