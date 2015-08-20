@@ -149,9 +149,9 @@ public class Doctor extends Employee {
 		try{
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
 					"SELECT employee_id, first_name, family_name, is_intern, is_resident, supervising_physician_id " +
-					"FROM Employee NATURAL JOIN Doctor " + 
-					"WHERE is_intern=1 OR is_resident=1"
-					+ "AND supervising_physician_id=? ");
+					" FROM Employee NATURAL JOIN Doctor " + 
+					" WHERE (is_intern=1 OR is_resident=1) "
+					+ " AND supervising_physician_id=? ");
 
 			s.setInt(1, this.getEmployeeId());
 		

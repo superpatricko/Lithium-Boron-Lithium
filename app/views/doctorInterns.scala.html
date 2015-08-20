@@ -1,0 +1,27 @@
+@(session: model.SessionAuth.SessionInfo)(subordinates: List[model.Doctor])
+
+@main("Patient Summary") {
+}{
+    @header(session)
+
+    <div class="jumbotron">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <h3>Summary of all Subordinate Interns and Residents</h3>
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                @for(doctor <- subordinates){
+                    <p><a href="#">@doctor.getFirstName() @doctor.getLastName()</a></p>
+                }
+    
+            </div>
+        </div>
+
+}{
+}
