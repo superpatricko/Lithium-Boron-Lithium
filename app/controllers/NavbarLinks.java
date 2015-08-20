@@ -24,7 +24,7 @@ public class NavbarLinks {
 	private static Link VIEW_HUGE_REPORT = new Link("Big Report",routes.AdminController.reports().url());
 	private static Link	VIEW_HUMANRESSOURCES = new Link("Human Ressouces", routes.AdminController.humanRessources().url());
 	private static Link VIEW_STATS_COST = new Link("Stats Cost",routes.AdminController.statsCost().url());
-	
+	private static Link VIEW_ORDER_SUPPLY =  new Link("Ordering",routes.AdminController.orderSupply().url());
 	
 	public static Link[] getLinksForSession(SessionInfo s){
 		
@@ -34,7 +34,7 @@ public class NavbarLinks {
 		
 		switch(s.role){
 			case Administrator:
-				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_READONLY,VIEW_HUMANRESSOURCES,VIEW_HUGE_REPORT,VIEW_STATS_COST};
+				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_READONLY,VIEW_HUMANRESSOURCES,VIEW_HUGE_REPORT,VIEW_STATS_COST,VIEW_ORDER_SUPPLY};
 			case Director:
 				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_MODIFY,VIEW_HUMANRESSOURCES,VIEW_HUGE_REPORT,VIEW_STATS_COST};
 			case Doctor:
