@@ -13,7 +13,7 @@
  @for(services <- admin){
 	<tr> 
 	<td>@services.getId() </td>   <td>@services.getName() </td> <td>@services.getCost() </td> 
-	<td> </td>     <td> </td>  
+	<td> @services.getUnit()</td>     <td> @services.getActive()</td>  
 	</tr>	
 	}
 	</table>

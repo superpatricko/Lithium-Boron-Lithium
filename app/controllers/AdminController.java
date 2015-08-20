@@ -67,7 +67,8 @@ public class AdminController extends Controller{
 	 }
 	 public static Result statsCost(){
 		 SessionInfo s =SessionAuth.instance.getSession(session());
-		 return ok(views.html.StatsCost.render(s,admin.getTotalCosts()));
+		 return ok(views.html.StatsCost.render(s,admin.getTotalCosts(),admin.getCurrentTotalCosts(),admin.getCostsPerMonth(),
+				 admin.getTotalSupplyUsing(),admin.getMonthUsage()));
 		 
 	 }
 	

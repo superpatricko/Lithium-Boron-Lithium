@@ -3,6 +3,7 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -134,6 +135,19 @@ public class Administrator extends Employee {
 	}
 	public  double getTotalCosts(){
 		return costReport.getTotalCosts();
+	}
+	public double getCurrentTotalCosts(){
+		return costReport.getCostCurrentSupplies();
+	}
+	public List<CostReport> getTotalSupplyUsing(){
+		return costReport.getTotalUsage();
+		
+	}
+	public List<CostReport> getMonthUsage(){
+		return costReport.getMonthUsageReport();
+	}
+	public ArrayList<Double> getCostsPerMonth(){
+		return costReport.getCostMonth();
 	}
 	public boolean deleteId(int id){
 		try{

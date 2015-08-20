@@ -1,20 +1,91 @@
-@(session: model.SessionAuth.SessionInfo)(costs: Double )
+@(session: model.SessionAuth.SessionInfo)(totalCosts: Double,
+	currentTotalCosts :Double,costPerMonth: List[Double],totalSupply:List[model.CostReport],
+	monthUsage:List[model.CostReport])
+	)
 @main("hello"){
 	
 }{
 @header(session)
-	<h1> Stats Cost Page </h1>
-	<h2> Total Cost Supplies All Time @costs</h2>
+	<h1 class="text-center text-success"> Stats Cost Page </h1>
+	<h2 class="text-center text-success"> Total Cost Supplies All Time <u>$ @totalCosts</u></h2>
+	<h2 class="text-center text-success"> Total Cost Current Supplies <u>$ @currentTotalCosts</u></h2>
 	<br>
 	<table class ="table table-bordered">
 	<tr> 
 	<td class="success">Month </td>   <td class="success"> Supplies Cost </td> 
 	</tr>
 	
- @*@for(services <- admin){*@
+	
+ 	<tr>
+ 	<td> January</td> <td>@costPerMonth(0) </td>
+ 	</tr>
+ 	<tr>
+ 	<td> February</td> <td>@costPerMonth(1) </td>
+ 	</tr>
+ 	<tr>
+ 	<td> March</td> <td>@costPerMonth(2) </td>
+ 	</tr>
+ 	<tr>
+ 	<td> April</td> <td>@costPerMonth(3) </td>
+ 	</tr>
+ 	<tr>
+ 	<td> May</td> <td>@costPerMonth(4) </td>
+ 	</tr>
+ 	<tr>
+ 	<td> June</td> <td>@costPerMonth(5) </td>
+ 	</tr>
+ 	<tr>
+ 	<td> July</td> <td>@costPerMonth(6) </td>
+ 	</tr>
+	<tr>
+ 	<td> August </td> <td>@costPerMonth(7) </td>
+ 	</tr>
+	
+	</table>
+	<h2> Total Supply Usage</h2>
+	<table class ="table table-bordered">
 	<tr> 
-	<td></td>
-	</tr>	
+	<td class="success">Supply </td>   <td class="success"> Usage </td> 
+	</tr>
+	@for(supply <-totalSupply){
+		<tr>
+		<td> @supply.getSupply()</td>   <td> @supply.getUsage()</td>
+		</tr>
+	}
+	
+	</table>
+	<h2> Monthly Usage</h2>
+	<table class ="table table-bordered">
+	<tr> 
+	<td class="success">Month </td>   <td class="success"> Supply </td> 
+	<td class="success">Usage </td> 
+	</tr>
+	
+	
+ 	<tr>
+ 	<td> January</td> <td>@monthUsage(0).getSupply() </td>  <td>@monthUsage(0).getUsage() </td>
+ 	</tr>
+ 	<tr>
+ 	<td> February</td> <td>@monthUsage(1).getSupply() </td> <td>@monthUsage(1).getUsage() </td>
+ 	</tr>
+ 	<tr>
+ 	<td> March</td> <td>@monthUsage(2).getSupply() </td>  <td>@monthUsage(2).getUsage() </td>
+ 	</tr>
+ 	<tr>
+ 	<td> April</td> <td>@monthUsage(3).getSupply() </td>   <td>@monthUsage(3).getUsage() </td>
+ 	</tr>
+ 	<tr>
+ 	<td> May</td> <td>@monthUsage(4).getSupply() </td>		<td>@monthUsage(4).getUsage() </td>
+ 	</tr>
+ 	<tr>
+ 	<td> June</td> <td>@monthUsage(5).getSupply() </td>    <td>@monthUsage(5).getUsage() </td>
+ 	</tr>
+ 	<tr>
+ 	<td> July</td> <td>@monthUsage(6).getSupply()</td>		<td>@monthUsage(6).getUsage() </td>
+ 	</tr>
+	<tr>
+ 	<td> August </td> <td>@monthUsage(7).getSupply() </td>	<td>@monthUsage(7).getUsage() </td>
+ 	</tr>
 	
 	</table>
 	
