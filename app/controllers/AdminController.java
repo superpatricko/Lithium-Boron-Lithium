@@ -72,7 +72,19 @@ public class AdminController extends Controller{
 		 
 		 
 	 }
-
+	 public static Result orderSupply(){
+		 SessionInfo s =SessionAuth.instance.getSession(session());
+		 return ok(views.html.OrderSupplies.render(s,admin.getAllSupplies()));
+	 }
+	 public static Result getOrderedSupply(){
+		 SessionInfo s =SessionAuth.instance.getSession(session());
+		 DynamicForm f= form().bindFromRequest();
+		 int id = Integer.parseInt(f.get("supplyId"));
+		 int room = Integer.parseInt(f.get("roomId"));
+		 int amount = Integer.parseInt(f.get("Amount"));
+		 return ok (views.html.index.render(s,"Your order is being processed"));
+		 
+	 }
 	
 	
 

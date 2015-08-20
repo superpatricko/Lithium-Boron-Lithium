@@ -20,6 +20,7 @@ public class Administrator extends Employee {
 	private static Schedule schedule;
 	private static Service service;
 	private DoctorReport doctorReport = new DoctorReport();
+	private Supplies supplies = new Supplies();
 
 	public Administrator(int employeeId) {
 		super(employeeId);
@@ -155,6 +156,9 @@ public class Administrator extends Employee {
 	}
 	public List<DoctorReport> getAllDoctorSurgeries(){
 		return doctorReport.totalSurgeriesProvided();
+	}
+	public List<Supplies> getAllSupplies(){
+		return supplies.totalSupplies();
 	}
 	
 	public boolean deleteId(int id){
