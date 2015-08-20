@@ -179,13 +179,58 @@ public class Payroll {
 				(yearsWorked / this.seniority_bonus_amount.intValue())  );
 			
 			if(seniorityBonus.compareTo(new BigDecimal(1)) > 0){
-				result.payPeriodInfo.add(new PayPeriodInfoLine("Seniority bonus percentage (" + yearsWorked + " years of work)", numberFormat.format(seniorityBonus)));
+				result.payPeriodInfo.add(new PayPeriodInfoLine("Seniority bonus percentage (" + yearsWorked + " years of work)", percentFormat.format(seniorityBonus)));
 				baseRate = baseRate.multiply(seniorityBonus);
 				result.payPeriodInfo.add(new PayPeriodInfoLine("Adjusted Salaray", currencyFormat.format(baseRate)));
 			}
 		}
 		
 		result.total = currencyFormat.format(baseRate.divide(new BigDecimal(52/2), MathContext.DECIMAL64)); // divide by number of periods in a year
+		
+		return result;
+	}
+
+	private PayPeriodInfo getDoctorPayAmountForCurrentPeriod() {
+		PayPeriodInfo result = new PayPeriodInfo();
+		
+		BigDecimal baseRate = base_rate == null ? new BigDecimal(0) : base_rate;
+		result.payPeriodInfo.add(new PayPeriodInfoLine("Base Salary", currencyFormat.format(baseRate)));
+				
+		if(this.seniority_bonus_amount != null && this.seniority_bonus_multiplier != null){
+			
+			int yearsWorked = getYearsWorked();
+			
+			// Calculate how much extra money that actually gives
+			BigDecimal seniorityBonus = 
+					new BigDecimal(this.seniority_bonus_multiplier.floatValue()).pow(
+				(yearsWorked / this.seniority_bonus_amount.intValue())  );
+			
+			if(seniorityBonus.compareTo(new BigDecimal(1)) > 0){
+				result.payPeriodInfo.add(new PayPeriodInfoLine("Seniority bonus percentage (" + yearsWorked + " years of work)", percentFormat.format(seniorityBonus)));
+				baseRate = baseRate.multiply(seniorityBonus);
+				result.payPeriodInfo.add(new PayPeriodInfoLine("Adjusted Salaray", currencyFormat.format(baseRate)));
+			}
+		}
+		
+		BigDecimal weekly = baseRate.divide(new BigDecimal(52/2), MathContext.DECIMAL64);
+		
+		Doctor doc = new Doctor(employeeId);
+		List<ServiceRecord> services = doc.getServicesBetween(PayPeriod.getStartOfCurrentWeek(), PayPeriod.getEndOfCurrentWeek());
+		
+		BigDecimal percent = new BigDecimal(0.5);
+		
+		for (ServiceRecord sr : services) {
+			BigDecimal serviceCost = new BigDecimal(sr.getService().getCost()).multiply(percent);
+			weekly = weekly.add( serviceCost );
+			result.payPeriodInfo.add(new PayPeriodInfoLine(
+					
+					sr.getService().getName() + " for patient " + sr.getPatient().getFirstName() + " " + sr.getPatient().getLastName()
+					+ " (" + sr.getService().getCost() + " @ " + percentFormat.format(percent) + ")", currencyFormat.format(serviceCost)));
+			
+		}
+		
+		
+		result.total = currencyFormat.format(weekly); // divide by number of periods in a year
 		
 		return result;
 	}
@@ -198,7 +243,7 @@ public class Payroll {
 		case year:
 			return getSalaryPayAmountForCurrentPeriod();
 		case doctor:
-			return new PayPeriodInfo();
+			return getDoctorPayAmountForCurrentPeriod();
 		default:
 			return new PayPeriodInfo();		
 		}

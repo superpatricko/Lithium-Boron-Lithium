@@ -237,6 +237,7 @@ public class Patient {
 								r.getString("service_cost"));
 
 						records.add(new ServiceRecord(
+								this,
 							 	new Date(r.getTimestamp("service_start").getTime()),
 							 	new Date(r.getTimestamp("service_end").getTime()),
 								service, doctor, nurse));

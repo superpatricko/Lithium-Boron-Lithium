@@ -60,14 +60,13 @@ public class PatientController extends Controller {
 				try{ nurseId = Integer.parseInt(form.get("nurse"));   }catch(NumberFormatException e){ nurseId = null; }
 				
 				ServiceRecord sr = new ServiceRecord(
+						new Patient(id),
 						start,
 						end,
 						new Service(Integer.parseInt(form.get("service"))),
 						doctorId == null ? null : new Doctor(doctorId),
 						nurseId  == null ? null : new Nurse(nurseId));
-				
-				sr.setPatient(new Patient(id));
-				
+								
 				ServiceRecord.Status status = sr.writeToDb();
 				
 				if(status == ServiceRecord.Status.SUCCESS){

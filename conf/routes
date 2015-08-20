@@ -31,6 +31,7 @@ GET     /view/nurse/:id             controllers.NurseController.view(id : Int)
 
 # Pay
 GET     /view/pay/:id               controllers.PayrollController.view(id : Int)
+GET     /view/pay                   controllers.PayrollController.viewSelf()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

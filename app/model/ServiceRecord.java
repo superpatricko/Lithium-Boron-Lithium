@@ -26,6 +26,7 @@ public class ServiceRecord {
 	/**
 	 * Create a new service record Object. Used both for retrieving values, and for creating and
 	 * subsequently saving Service Records.
+	 * @param patient 
 	 * 
 	 * @param start The start time of the ServiceRecord
 	 * @param end The end time of the ServiceRecord
@@ -33,7 +34,8 @@ public class ServiceRecord {
 	 * @param doctor The doctor to perform the service (may be null)
 	 * @param nurse The nurse to perform the service (may be null)
 	 */
-	public ServiceRecord(Date start, Date end, Service service, Doctor doctor, Nurse nurse) {
+	public ServiceRecord(Patient patient, Date start, Date end, Service service, Doctor doctor, Nurse nurse) {
+		this.patient = patient;
 		this.nurse = nurse;
 		this.doctor = doctor;
 		this.service = service;

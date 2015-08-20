@@ -1,12 +1,11 @@
 package model;
 
-import model.PatientRoom.*;
-import model.Patient.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -217,6 +216,61 @@ public class Doctor extends Employee {
 		}
 		
 		return patients;
+	}
+	
+	public List<ServiceRecord> getServicesBetween(Calendar from, Calendar to){
+		List<ServiceRecord> services = new LinkedList<ServiceRecord>();
+		
+		try{
+			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
+					"SELECT "
+					+ " cost, first_name, family_name, patient_id, name,"
+					+ " start_date_time, end_date_time, service_id,  nurse_id "
+					+ " FROM patient "
+					+ " NATURAL JOIN service_log "
+					+ " NATURAL JOIN service "
+					+ " WHERE doctor_id=? "
+					+ " AND start_date_time BETWEEN ? AND ?");
+
+			s.setInt(1, this.getEmployeeId());
+		
+			s.setTimestamp(2, new Timestamp(from.getTimeInMillis()));
+			s.setTimestamp(3, new Timestamp(to.getTimeInMillis()));
+			
+			ResultSet r = null;
+			
+			try{
+				r = s.executeQuery();
+				
+				while(r.next()){
+					 ServiceRecord sr = new ServiceRecord(
+							 new Patient(
+									 r.getInt("patient_id"),
+									 r.getString("first_name"),
+									 r.getString("family_name"), null, null, new PatientRoom(null)),
+							 r.getDate("start_date_time"),
+							 r.getDate("end_date_time"),
+							 new Service(
+									 r.getInt("service_id"),
+									 r.getString("name"),
+									 r.getString("cost")),
+							this,
+							new Nurse(r.getInt("nurse_id")));
+					 
+					 services.add(sr);
+					 
+				}
+								
+			}finally{
+				if (r != null) r.close();
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return services;
+		
+		
 	}
 	
 	public String getFirstName() {
