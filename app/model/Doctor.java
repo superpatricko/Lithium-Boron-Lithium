@@ -24,8 +24,8 @@ public class Doctor extends Employee {
 	
 	private String firstName;
 	private String lastName;
-	private boolean is_intern;
-	private boolean is_resident;
+	private boolean intern;
+	private boolean resident;
 	private int supervising_physician_id;
 
 	/**
@@ -65,8 +65,8 @@ public class Doctor extends Employee {
 		super(employeeId);
 		this.firstName = firstName;
 		this.lastName  = lastName;
-		this.is_intern  = is_intern;
-		this.is_resident  = is_resident;
+		this.intern  = is_intern;
+		this.resident  = is_resident;
 		this.supervising_physician_id  = supervising_physician_id;
 	}
 
@@ -107,13 +107,11 @@ public class Doctor extends Employee {
 	public static Doctor getSpecificDoctor(int givenID){
 		try {
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
-					"SELECT employee_id, first_name, family_name, is_intern, is_resident, supervising_physician_id " +
-					"FROM Employee NATURAL JOIN Doctor" +
-					"WHERE Employee.employee_id=? "
-					+ "AND Doctor.employee_id=? ");
+					" SELECT employee_id, first_name, family_name, is_intern, is_resident, supervising_physician_id  " +
+							" FROM Employee NATURAL JOIN Doctor " +
+							" WHERE employee_id=? ");
 
 			s.setInt(1, givenID);
-			s.setInt(2, givenID);
 
 			ResultSet r = null;
 
@@ -222,6 +220,9 @@ public class Doctor extends Employee {
 		List<ServiceRecord> services = new LinkedList<ServiceRecord>();
 		
 		try{
+			
+			boolean useDates = from != null && to != null;
+			
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
 					"SELECT "
 					+ " cost, first_name, family_name, patient_id, name,"
@@ -230,12 +231,14 @@ public class Doctor extends Employee {
 					+ " NATURAL JOIN service_log "
 					+ " NATURAL JOIN service "
 					+ " WHERE doctor_id=? "
-					+ " AND start_date_time BETWEEN ? AND ?");
+					+ (useDates ? " AND start_date_time BETWEEN ? AND ?" : ""));
 
 			s.setInt(1, this.getEmployeeId());
 		
-			s.setTimestamp(2, new Timestamp(from.getTimeInMillis()));
-			s.setTimestamp(3, new Timestamp(to.getTimeInMillis()));
+			if(useDates){
+				s.setTimestamp(2, new Timestamp(from.getTimeInMillis()));
+				s.setTimestamp(3, new Timestamp(to.getTimeInMillis()));
+			}
 			
 			ResultSet r = null;
 			
@@ -349,6 +352,14 @@ public class Doctor extends Employee {
 		}
 		
 		return false;
+	}
+
+	public boolean isIntern() {
+		return intern;
+	}
+
+	public boolean isResident() {
+		return resident;
 	}
 
 

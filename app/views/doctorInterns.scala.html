@@ -17,7 +17,7 @@
             <div class="panel-body">
 
                 @for(doctor <- subordinates){
-                    <p><a href="#">@doctor.getFirstName() @doctor.getLastName()</a></p>
+                    <p><a href="@routes.DoctorController.view(doctor.getEmployeeId())">@doctor.getFirstName() @doctor.getLastName()</a></p>
                 }
     
             </div>

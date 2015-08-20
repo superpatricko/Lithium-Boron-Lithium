@@ -15,6 +15,7 @@ GET     /logout                     controllers.LogInOutController.logout()
 # Doctor
 GET 	/patient/view/all           controllers.DoctorController.viewPatients()
 GET     /subordinate/view/all       controllers.DoctorController.viewSubordinates()
+GET     /doctor/view/:id            controllers.DoctorController.view(id : Int)
 
 # Patient
 GET     /patient/view/:id           controllers.PatientController.view(id : Int)

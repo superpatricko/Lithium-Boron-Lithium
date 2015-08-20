@@ -1,0 +1,58 @@
+@(session: model.SessionAuth.SessionInfo)(doctor: model.Doctor)
+
+@main("Doctor Report for " + doctor.getFirstName() + " " + doctor.getLastName()) {
+}{
+    @header(session)
+
+    <div class="jumbotron">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <h3>Doctor Summary - @doctor.getFirstName() @doctor.getLastName()
+                
+                @if(doctor.isResident()){
+                    (Resident)
+                }
+                @if(doctor.isIntern()){
+                    (Intern)
+                }
+                
+                </h3>
+
+                
+                
+            </div>
+        </div>
+
+
+        @for(record <- doctor.getServicesBetween(null,null)) {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>@record.getService().getName()</h4>
+
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Started</td>
+                            <td>@record.getStart()</td>
+                        </tr>
+                        <tr>
+                            <td>Completed</td>
+                            <td>@record.getEnd()</td>
+                        </tr>
+
+                            <tr>
+                                <td>Patient</td>
+                                <td><a href="@routes.PatientController.view(record.getPatient().getId())">@record.getPatient().getFirstName() @record.getPatient().getLastName()</a></td>
+                            </tr>
+
+                    </table>
+
+
+                </div>
+            </div>
+        }
+
+    </div>
+}{
+ 
+}

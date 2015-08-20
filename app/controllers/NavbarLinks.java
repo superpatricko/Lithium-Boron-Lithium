@@ -40,7 +40,7 @@ public class NavbarLinks {
 			case Doctor:
 				return new Link[]{VIEW_ALL_PATIENTS, VIEW_ALL_SUBORDINATES, VIEW_SCHEDULE};
 			case Intern:
-				return new Link[]{VIEW_ALL_PATIENTS, VIEW_SCHEDULE};
+				return new Link[]{ VIEW_SCHEDULE};
 			case Nurse:
 				return new Link[]{VIEW_SCHEDULE};
 			case NurseShiftSupervisor:
@@ -54,7 +54,7 @@ public class NavbarLinks {
 			case PlaymateNurse:
 				return new Link[]{VIEW_SCHEDULE};
 			case Resident:
-				return new Link[]{VIEW_ALL_PATIENTS, VIEW_SCHEDULE};
+				return new Link[]{ VIEW_SCHEDULE};
 			case SeniorAdministrator:
 				return new Link[]{VIEW_SCHEDULE,VIEW_SERVICES_MODIFY,VIEW_HUMANRESSOURCES};
 			case Technician:
