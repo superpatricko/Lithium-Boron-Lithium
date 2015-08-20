@@ -19,6 +19,7 @@ public class Administrator extends Employee {
 	private  CostReport costReport = new CostReport();
 	private static Schedule schedule;
 	private static Service service;
+	private DoctorReport doctorReport = new DoctorReport();
 
 	public Administrator(int employeeId) {
 		super(employeeId);
@@ -149,6 +150,13 @@ public class Administrator extends Employee {
 	public ArrayList<Double> getCostsPerMonth(){
 		return costReport.getCostMonth();
 	}
+	public List<DoctorReport> getAllDoctorServices(){
+		return doctorReport.totalServicesProvided();
+	}
+	public List<DoctorReport> getAllDoctorSurgeries(){
+		return doctorReport.totalSurgeriesProvided();
+	}
+	
 	public boolean deleteId(int id){
 		try{
 			/*String findIsActive = "Select is_active from service where service_id=?";
