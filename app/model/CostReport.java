@@ -52,11 +52,12 @@ public class CostReport {
 		try{
 
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
-					"SELECT order_history.supply_id  AS Supply ,( quantity-current_stock ) AS `usage`" +
+					"SELECT order_history.supply_id  AS Supply ,Sum(quantity)-current_stock  AS `usage`" +
 							"  FROM order_history ,supply " +
 							"  WHERE order_history.supply_id = supply.supply_id" +
 							" AND order_history.date_of_order >= ? " +
-					" AND order_history.date_of_order <= ?");
+					" AND order_history.date_of_order <= ?"+
+							"  GROUP BY supply.supply_id");
 			Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(beginAndEndMonth[month][0]);
 			Date utilDate2 =  new SimpleDateFormat("yyyy-MM-dd").parse(beginAndEndMonth[month][1]);
 			java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime()); 
@@ -164,9 +165,11 @@ public class CostReport {
 		List<CostReport> reports = new LinkedList<CostReport>();
 		try{
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
-					"SELECT order_history.supply_id AS Supply, (quantity-current_stock) AS 'usage' "+
+					"SELECT order_history.supply_id AS Supply, Sum(quantity)-current_stock AS 'usage' "+
 							" FROM order_history, supply " +
-					" WHERE order_history.supply_id=supply.supply_id");
+					" WHERE order_history.supply_id=supply.supply_id "+
+					"GROUP BY supply.supply_id");
+							
 
 			ResultSet r = null;
 
