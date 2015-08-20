@@ -33,7 +33,7 @@ public class Patient {
 	/**
 	 * Creates a Patient with fields properly filled out
 	 */
-	private Patient(int id, String fname, String lname, String medicareNumber, String hospitalCardNumber, PatientRoom room){
+	public Patient(int id, String fname, String lname, String medicareNumber, String hospitalCardNumber, PatientRoom room){
 		this.id = id;
 		this.firstName = fname;
 		this.lastName = lname;

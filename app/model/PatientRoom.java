@@ -13,6 +13,13 @@ public class PatientRoom {
 
 	private Nurse nurse;
 
+	// Default room
+	public PatientRoom(String roomNumber) {
+		this.roomNumber = roomNumber;
+		this.maxCapacity = 4;
+		this.nurse = null;
+	}
+
 	/*package*/PatientRoom(String roomNumber, int maxCapacity, Nurse nurse){
 		this.roomNumber = roomNumber;
 		this.maxCapacity = maxCapacity;

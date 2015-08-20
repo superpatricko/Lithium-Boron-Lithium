@@ -1,5 +1,7 @@
 package model;
 
+import model.PatientRoom.*;
+import model.Patient.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -80,7 +82,7 @@ public class Doctor extends Employee {
 		
 		try{
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
-					"SELECT employee_id, first_name, family_name FROM employee NATURAL JOIN doctor");
+					"SELECT employee_id, first_name, family_name FROM Employee NATURAL JOIN Doctor");
 	
 			ResultSet r = null;
 			
@@ -141,6 +143,81 @@ public class Doctor extends Employee {
 		return null;
 	}
 
+	// Get a list of all Interns/Residents that has been assigned to this doctor
+	public List<Doctor> getAllInternsResidents() {
+		List<Doctor> internResidents = new LinkedList<Doctor>();
+		
+		try{
+			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
+					"SELECT employee_id, first_name, family_name, is_intern, is_resident, supervising_physician_id " +
+					"FROM Employee NATURAL JOIN Doctor " + 
+					"WHERE is_intern=1 OR is_resident=1"
+					+ "AND supervising_physician_id=? ");
+
+			s.setInt(1, this.getEmployeeId());
+		
+			ResultSet r = null;
+			
+			try{
+				r = s.executeQuery();
+				
+				while(r.next()){
+					internResidents.add(new Doctor(
+						r.getInt("employee_id"), 
+						r.getString("first_name"), 
+						r.getString("family_name"),
+						r.getBoolean("is_intern"),
+						r.getBoolean("is_resident"),
+						r.getInt("supervising_physician_id")));
+				}
+								
+			}finally{
+				if (r != null) r.close();
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return internResidents;
+	}
+
+	// Get a list of all Patients that has been assigned to this doctor
+	public List<Patient> getAllPatients() {
+		List<Patient> patients = new LinkedList<Patient>();
+		
+		try{
+			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
+					"SELECT patient_id, first_name, family_name, patient_room, medicare_number, hospital_card_number, assigned_doctor, is_in_treatment " +
+					"FROM Doctor NATURAL JOIN Patient " + 
+					"WHERE Patient.assigned_doctor=?");
+
+			s.setInt(1, this.getEmployeeId());
+		
+			ResultSet r = null;
+			
+			try{
+				r = s.executeQuery();
+				
+				while(r.next()){
+					patients.add(new Patient(
+						r.getInt("patient_id"), 
+						r.getString("first_name"), 
+						r.getString("family_name"),
+						r.getString("medicare_number"),
+						r.getString("hospital_card_number"),
+						new PatientRoom((r.getString("patient_room")))  // is this legal in java?
+						)); 
+				}
+								
+			}finally{
+				if (r != null) r.close();
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return patients;
+	}
 	
 	public String getFirstName() {
 		return firstName;
