@@ -9,13 +9,13 @@
         @for(p <- pay.payPeriodInfo) {
             <tr>
                 <td>@p.what</td>
-                <td>@p.howMuch.toPlainString()</td>
+                <td>@p.howMuch</td>
             </tr>
         }
 
         <tr>
             <td>Total</td>
-            <td>@pay.total.toPlainString()</td>
+            <td>@pay.total</td>
         </tr>
         
     </table>

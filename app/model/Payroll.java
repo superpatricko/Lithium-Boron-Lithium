@@ -1,10 +1,12 @@
 package model;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,16 +49,16 @@ public class Payroll {
 		
 		public static class PayPeriodInfoLine {
 			public final String what;
-			public final BigDecimal howMuch;
+			public final String howMuch;
 			
-			public PayPeriodInfoLine(String w, BigDecimal h){
+			public PayPeriodInfoLine(String w, String h){
 				this.what = w;
 				this.howMuch = h;
 			}
 		};
 		
 		public final List<PayPeriodInfoLine> payPeriodInfo;
-		public BigDecimal total;
+		public String total;
 		
 		public PayPeriodInfo(){
 			payPeriodInfo = new LinkedList<Payroll.PayPeriodInfo.PayPeriodInfoLine>();
@@ -64,43 +66,58 @@ public class Payroll {
 		
 	};
 	
-	public PayPeriodInfo getWagePayAmountForCurrentPeriod(){
+	private int getYearsWorked(){
+		// Get a copy of the date of hire of the employee
+		Calendar workStart   = Calendar.getInstance( );
+		workStart.setTimeInMillis( dateOfHire.getTimeInMillis() );
+		
+		// Get the start of the current period
+		Calendar periodStart = PayPeriod.getStartOfCurrentPeriod();
+		
+		// Get the difference in years between the start of work and the start of the period
+		int deltaYear = periodStart.get(Calendar.YEAR) - workStart.get(Calendar.YEAR);
+		workStart.set(Calendar.YEAR, periodStart.get(Calendar.YEAR));
+		
+		// If the period started before the employee's work anniversary, then
+		// they have not worked this *full* year
+		if( periodStart.before(workStart)){
+			deltaYear -= 1; // round down the number of years
+		}
+		
+		return deltaYear;
+	}
+	
+	private final static NumberFormat percentFormat  = NumberFormat.getPercentInstance();
+	private final static NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+	private final static NumberFormat numberFormat   = NumberFormat.getInstance();
+	
+	static {
+		numberFormat.setMaximumFractionDigits(2);
+		numberFormat.setMinimumFractionDigits(2);
+	}
+	
+	private PayPeriodInfo getWagePayAmountForCurrentPeriod(){
 		PayPeriodInfo result = new PayPeriodInfo();
 		
-		
 		BigDecimal baseRate = base_rate == null ? new BigDecimal(0) : base_rate;
-		result.payPeriodInfo.add(new PayPeriodInfoLine("Base Salary", baseRate));
+		result.payPeriodInfo.add(new PayPeriodInfoLine("Hourly Rate", currencyFormat.format(baseRate)));
 				
 		if(this.seniority_bonus_amount != null && this.seniority_bonus_multiplier != null){
-			// Get a copy of the date of hire of the employee
-			Calendar workStart   = Calendar.getInstance( );
-			workStart.setTimeInMillis( dateOfHire.getTimeInMillis() );
 			
-			// Get the start of the current period
-			Calendar periodStart = PayPeriod.getStartOfCurrentPeriod();
-			
-			// Get the difference in years between the start of work and the start of the period
-			int deltaYear = periodStart.get(Calendar.YEAR) - workStart.get(Calendar.YEAR);
-			workStart.set(Calendar.YEAR, periodStart.get(Calendar.YEAR));
-			
-			// If the period started before the employee's work anniversary, then
-			// they have not worked this *full* year
-			if( periodStart.before(workStart)){
-				deltaYear -= 1; // round down the number of years
-			}
+			int yearsWorked = getYearsWorked();
 			
 			// Calculate how much extra money that actually gives
 			BigDecimal seniorityBonus = new BigDecimal(
-				(deltaYear / this.seniority_bonus_amount.intValue()) * this.seniority_bonus_multiplier.floatValue() );
+				(yearsWorked / this.seniority_bonus_amount.intValue()) * this.seniority_bonus_multiplier.floatValue() );
 			
-			result.payPeriodInfo.add(new PayPeriodInfoLine("Seniority bonus (" + deltaYear + " years of work)", seniorityBonus));
+			result.payPeriodInfo.add(new PayPeriodInfoLine("Seniority bonus (" + yearsWorked + " years of work)", numberFormat.format(seniorityBonus)));
 			
 			baseRate = baseRate.add(seniorityBonus);
 		}
 		
 		BigDecimal hoursWorked = PayPeriod.getHoursWorkedInCurrentPeriod(employeeId);
 		
-		result.payPeriodInfo.add(new PayPeriodInfoLine("Hours worked this period", hoursWorked));
+		result.payPeriodInfo.add(new PayPeriodInfoLine("Hours worked this period", numberFormat.format(hoursWorked)));
 		
 		BigDecimal regularHours = new BigDecimal(36);
 		
@@ -113,7 +130,7 @@ public class Payroll {
 									+" @ "
 									+baseRate.toPlainString()
 									+")", 
-							regularPay));
+							currencyFormat.format(regularPay)));
 			
 			BigDecimal overtimeRate = baseRate.multiply(new BigDecimal(overtime_multiplier));
 			BigDecimal overtimeHours = hoursWorked.subtract(regularHours);
@@ -125,9 +142,9 @@ public class Payroll {
 									+" @ "
 									+overtimeRate.toPlainString()
 									+")", 
-							overtimePay));
+									currencyFormat.format(overtimePay)));
 			
-			result.total = regularPay.add(overtimePay);
+			result.total = currencyFormat.format(regularPay.add(overtimePay));
 			
 		}else{
 			result.payPeriodInfo.add(
@@ -137,13 +154,40 @@ public class Payroll {
 									+" @ "
 									+baseRate.toPlainString()
 									+")", 
-							hoursWorked.multiply(baseRate)));
+							numberFormat.format(hoursWorked.multiply(baseRate))));
 			
-			result.total = hoursWorked.multiply(baseRate);
+			result.total = currencyFormat.format(hoursWorked.multiply(baseRate));
 		}
 		
 		return result;
 				
+	}
+
+	private PayPeriodInfo getSalaryPayAmountForCurrentPeriod() {
+		PayPeriodInfo result = new PayPeriodInfo();
+		
+		BigDecimal baseRate = base_rate == null ? new BigDecimal(0) : base_rate;
+		result.payPeriodInfo.add(new PayPeriodInfoLine("Base Salary", currencyFormat.format(baseRate)));
+				
+		if(this.seniority_bonus_amount != null && this.seniority_bonus_multiplier != null){
+			
+			int yearsWorked = getYearsWorked();
+			
+			// Calculate how much extra money that actually gives
+			BigDecimal seniorityBonus = 
+					new BigDecimal(this.seniority_bonus_multiplier.floatValue()).pow(
+				(yearsWorked / this.seniority_bonus_amount.intValue())  );
+			
+			if(seniorityBonus.compareTo(new BigDecimal(1)) > 0){
+				result.payPeriodInfo.add(new PayPeriodInfoLine("Seniority bonus percentage (" + yearsWorked + " years of work)", numberFormat.format(seniorityBonus)));
+				baseRate = baseRate.multiply(seniorityBonus);
+				result.payPeriodInfo.add(new PayPeriodInfoLine("Adjusted Salaray", currencyFormat.format(baseRate)));
+			}
+		}
+		
+		result.total = currencyFormat.format(baseRate.divide(new BigDecimal(52/2), MathContext.DECIMAL64)); // divide by number of periods in a year
+		
+		return result;
 	}
 	
 	public PayPeriodInfo getPayAmountForCurrentPeriod(){
@@ -152,7 +196,7 @@ public class Payroll {
 		case wage:
 			return getWagePayAmountForCurrentPeriod();
 		case year:
-			return new PayPeriodInfo();
+			return getSalaryPayAmountForCurrentPeriod();
 		case doctor:
 			return new PayPeriodInfo();
 		default:
