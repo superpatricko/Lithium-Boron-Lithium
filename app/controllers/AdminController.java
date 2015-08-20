@@ -82,6 +82,7 @@ public class AdminController extends Controller{
 		 int id = Integer.parseInt(f.get("supplyId"));
 		 int room = Integer.parseInt(f.get("roomId"));
 		 int amount = Integer.parseInt(f.get("Amount"));
+		 admin.processOrder(id, room, amount);
 		 return ok (views.html.index.render(s,"Your order is being processed"));
 		 
 	 }

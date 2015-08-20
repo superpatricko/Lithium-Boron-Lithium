@@ -3,7 +3,9 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -160,8 +162,62 @@ public class Administrator extends Employee {
 	public List<Supplies> getAllSupplies(){
 		return supplies.totalSupplies();
 	}
-	
-	public boolean deleteId(int id){
+	public void processOrder(int id,int room,int amount){
+				List<Supplies> allSup =  getAllSupplies();
+				System.out.println("welcone");
+				Supplies sup = new Supplies();
+		
+				for(int i=0;i<allSup.size();i++){
+					if(allSup.get(i).getSupply_Id()==id){
+						sup = allSup.get(i);
+						break;
+					}
+				}
+				if(amount+sup.getCurrentStock()>=sup.getMax_Capacity()){
+					return;
+				}
+				
+				try{
+					System.out.println("in fist try");
+					/*String findIsActive = "Select is_active from service where service_id=?";
+					PreparedStatement active =DatabaseManager.instance.createPreparedStatement(
+							findIsActive);
+					active.setInt(1, id);
+					ResultSet result = active.executeQuery();*/
+					
+					String query = "Update Supply set current_stock =?,date_last_purchase=? where supply_id=? ";
+							
+							
+					PreparedStatement s =DatabaseManager.instance.createPreparedStatement(
+							query);
+		
+					
+					
+					
+					Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse("2015-08-20");
+					
+					java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime()); 
+					
+					s.setInt(1, sup.getCurrentStock()+amount);
+					s.setDate(2, sqlDate);
+					s.setInt(3, id);
+					
+					System.out.println("make it this far");
+					
+					
+					System.out.println("excuting " +s);
+		
+					System.out.println(s.executeUpdate());		
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+				
+		
+		
+			}
+				
+		public boolean deleteId(int id){
 		try{
 			/*String findIsActive = "Select is_active from service where service_id=?";
 			PreparedStatement active =DatabaseManager.instance.createPreparedStatement(
