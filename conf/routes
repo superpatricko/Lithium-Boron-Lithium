@@ -25,8 +25,12 @@ GET      /admin/reports             controllers.AdminController.reports()
 GET      /director/services/modify  controllers.AdminController.addService()
 POST	/director/services/modify	controllers.AdminController.insertService()
 GET     /admin/statsCost            controllers.AdminController.statsCost()
+
 # Nurse
 GET     /view/nurse/:id             controllers.NurseController.view(id : Int)
+
+# Pay
+GET     /view/pay/:id               controllers.PayrollController.view(id : Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

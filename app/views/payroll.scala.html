@@ -1,25 +1,24 @@
-@(payrolls: List[model.Payroll])
+@(session: model.SessionAuth.SessionInfo)(pay: model.Payroll.PayPeriodInfo)
 
-<table class="table table-bordered">
-    <tr>
-    	<td>payroll_id</td>
-    	<td>title</td>
-    	<td>pay_type</td>
-    	<td>base_rate</td>
-    	<td>seniority_bonus_amount</td>
-    	<td>seniority_bonus_multiplier</td>
-    	<td>overtime_multiplier</td>
-    </tr>
-    @for(payroll <- payrolls) {
-	    <tr>
-		    <td>@payroll.getPayroll_id</td>
-		    <td>@payroll.getTitle</td>
-		    <td>@payroll.getPay_type</td>
-		    <td>@payroll.getBase_rate</td>
-		    <td>@payroll.getSeniority_bonus_amount</td>
-		    <td>@payroll.getSeniority_bonus_multiplier</td>
-		    <td>@payroll.getOvertime_multiplier</td>
-	    </tr>
-    }
-</table>
+@main("View Schedule") {
+}{
 
+    @header(session)
+    
+    <table class="table table-bordered">
+        @for(p <- pay.payPeriodInfo) {
+            <tr>
+                <td>@p.what</td>
+                <td>@p.howMuch.toPlainString()</td>
+            </tr>
+        }
+
+        <tr>
+            <td>Total</td>
+            <td>@pay.total.toPlainString()</td>
+        </tr>
+        
+    </table>
+
+}{
+}
