@@ -52,7 +52,6 @@ public class Reports {
 			PreparedStatement s = DatabaseManager.instance.createPreparedStatement(
 					"Select * from service_log natural join operating_room natural join service"
 							+ "  natural join unit "
-							+ "  group by(doctor_id) "
 							+ "  order by unit_id,service_id;");
 
 			ResultSet r = null;
@@ -81,6 +80,7 @@ public class Reports {
 		return reports;
 
 	}
+	
 	public int getServiceLog() {
 		return serviceLog;
 	}
@@ -126,4 +126,5 @@ public class Reports {
 	public String getUnitName() {
 		return unitName;
 	}
+
 }

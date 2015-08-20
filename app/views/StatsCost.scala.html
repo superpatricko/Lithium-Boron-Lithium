@@ -1,0 +1,22 @@
+@(session: model.SessionAuth.SessionInfo)(costs: Double )
+@main("hello"){
+	
+}{
+@header(session)
+	<h1> Stats Cost Page </h1>
+	<h2> Total Cost Supplies All Time @costs</h2>
+	<br>
+	<table class ="table table-bordered">
+	<tr> 
+	<td class="success">Month </td>   <td class="success"> Supplies Cost </td> 
+	</tr>
+	
+ @*@for(services <- admin){*@
+	<tr> 
+	<td></td>
+	</tr>	
+	
+	</table>
+	
+}{
+}
