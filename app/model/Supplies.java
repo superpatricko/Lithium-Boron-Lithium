@@ -32,6 +32,8 @@ public class Supplies {
 		this.lastPurchase = lastPurchase;
 		this.max_Capacity = max_Capacity;
 		this.room =room;
+		this.cost = cost;
+		this.type = type;
 
 
 	}
@@ -51,7 +53,7 @@ public class Supplies {
 		try{
 			r = s.executeQuery();
 			while(r.next()){
-				l.add(new Supplies(r.getInt("supply_id"),"","",r.getInt("current_Stock"),r.getInt("max_capacity"),
+				l.add(new Supplies(r.getInt("supply_id"),r.getString("name"),"",r.getInt("current_Stock"),r.getInt("max_capacity"),
 						r.getDouble("cost"),r.getInt("room_id"),r.getString("type")));
 			}
 
